@@ -1,0 +1,41 @@
+//
+//  HomeViewModel.swift
+//  Stickies
+//
+//  Created by Chris W on 10/28/25.
+//
+
+import SwiftUI
+import SwiftData
+import Combine
+
+final class HomeViewModel: ObservableObject {
+    
+    //Model context from SwiftData
+    private var modelContext: ModelContext
+    
+    //Grid Layout
+    let gridColumns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    let languages = popularLanguages.map { LanguageItem(code: $0.code, name: $0.name, flag: $0.flag) }
+    
+    //Published state vars
+    @Published var isEditing: Bool = false
+    
+    
+    init(context: ModelContext) {
+        self.modelContext = context
+    }
+    
+    func addLanguage(_ language: Language) {
+        modelContext.insert(language)
+        try? modelContext.save()
+    }
+    
+    func deleteLanguage(_ language: Language) {
+        modelContext.delete(language) // this automatically deletes stickies too
+        try? modelContext.save()
+    }
+}

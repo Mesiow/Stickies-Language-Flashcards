@@ -10,23 +10,37 @@ import SwiftData
 
 @main
 struct StickiesApp: App {
-    var sharedModelContainer: ModelContainer = {
+    
+    let container: ModelContainer
+    
+    @StateObject private var homeViewModel: HomeViewModel
+    @StateObject private var navigationModel = NavigationModel()
+    
+    init(){
         let schema = Schema([
-            Item.self,
+            Language.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+        
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            self.container = container
+            
+            _homeViewModel = StateObject(
+                wrappedValue: HomeViewModel(context: container.mainContext)
+            )
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }()
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .preferredColorScheme(.light) //app is designed for light mode only (looks better)
+                .environmentObject(homeViewModel)
+                .environmentObject(navigationModel)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(container)
     }
 }
