@@ -17,16 +17,67 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack(path: $navigationModel.path) {
-            ScrollView {
-                LazyVGrid(columns: viewModel.gridColumns, spacing: 2) {
-                    ForEach(languages, id: \.id) { lang in
-                        NavigationLink(value: Route.languageStickiesView(lang)) {
-                            LanguageCardView(language: lang)
+            ZStack {
+                ScrollView {
+                    LazyVGrid(columns: viewModel.gridColumns, spacing: 2) {
+                        ForEach(languages, id: \.id) { lang in
+                            ZStack(alignment: .topTrailing) {
+                                
+                                NavigationLink(value: Route.languageStickiesView(lang)) {
+                                    LanguageCardView(language: lang)
+                                }
+                                .buttonStyle(.plain)
+                                
+                                ZStack {
+                                    //Delete button shown in editing
+                                    if viewModel.isEditing {
+                                        Button {
+                                            viewModel.languageToDelete = lang
+                                            viewModel.showDeleteLangConfirmation = true
+                                        }label: {
+                                            Image(systemName: SFSymbols.xmarkAppFill)
+                                                .font(.system(size: 22))
+                                                .foregroundColor(.red)
+                                                .padding(6)
+                                            
+                                        }
+                                    }
+                                }
+                                .transition(.opacity)
+                                .animation(.easeInOut(duration: 0.25), value: viewModel.isEditing)
+                            }
                         }
-                        .buttonStyle(.plain)
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
+                if languages.isEmpty {
+                    VStack(spacing: 12) {
+                        Spacer(minLength: 0) // ensures it starts below nav/title
+                        ContentUnavailableView {
+                            Label{
+                                Text("No languages yet")
+                                    .foregroundStyle(.primary)
+                            }icon: {
+                                Image("icon")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 70, height: 70)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }description: {
+                            Text("To get started, tap the + add button to add a language")
+                                .foregroundStyle(.gray)
+                        }
+                        
+                        Spacer()
+                    }
+                    .allowsHitTesting(false)
+                    .ignoresSafeArea(edges: [.horizontal, .bottom]) // don't ignore top
+                    .transition(.opacity)
+                    .animation(.easeInOut(duration: 0.3), value: languages)
+                    .background(Color.clear) // no background covering the nav
+                    
+                }
             }
             .navigationTitle("Languages")
             .navigationDestination(for: Route.self) { route in
@@ -61,7 +112,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button(viewModel.isEditing ? "Done" : "Edit") {
-                        withAnimation(.easeInOut(duration: 0.2)) {
+                        withAnimation(.easeInOut(duration: 0.25)) {
                             viewModel.isEditing.toggle()
                         }
                     }
@@ -72,6 +123,22 @@ struct HomeView: View {
                         Image(systemName: SFSymbols.ellipseCircle)
                     }
                 }
+            }
+            .alert(viewModel.languageToDelete != nil ? "Are you sure you want to delete \(viewModel.languageToDelete?.name ?? "Name")?" : "Are you sure you want to delete this language?", isPresented: $viewModel.showDeleteLangConfirmation) {
+                Button("Delete", role: .destructive) {
+                    //Delete language
+                    if let language = viewModel.languageToDelete {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            viewModel.deleteLanguage(language)
+                        }
+                        viewModel.languageToDelete = nil
+                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    viewModel.languageToDelete = nil
+                }
+            }message: {
+                Text("Deleting this language will also remove all of your sticky flashcards associated with it.")
             }
             .background(
                 AppInfo.secondaryTintColor.opacity(0.35).ignoresSafeArea()

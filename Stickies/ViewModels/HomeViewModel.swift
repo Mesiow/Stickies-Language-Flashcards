@@ -23,7 +23,8 @@ final class HomeViewModel: ObservableObject {
     
     //Published state vars
     @Published var isEditing: Bool = false
-    
+    @Published var showDeleteLangConfirmation = false
+    @Published var languageToDelete: Language? = nil
     
     init(context: ModelContext) {
         self.modelContext = context
