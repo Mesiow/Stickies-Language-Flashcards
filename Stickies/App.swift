@@ -12,6 +12,10 @@ enum AppInfo {
     //Colors
     static let mainTintColor = Color("PrimaryAppTintColor")
     static let secondaryTintColor = Color("SecondaryAppTintColor")
+    static let stickyNoteTintColor = Color("StickyNoteTintColor")
+    static let stickyNoteBackgroundTintColor = Color("StickyNoteBackgroundTintColor")
+    static let actionButtonTintColor = Color("ActionButtonTintColor")
+    static let actionButtonBackgroundTintColor = Color("ActionButtonBackgroundTintColor")
 }
 
 enum SFSymbols {
@@ -41,4 +45,5 @@ enum SFSymbols {
     static let ellipseCircle = "ellipsis.circle"
     static let giftFill = "gift.fill"
     static let infoCircle = "info.circle"
+    static let plusCircleFill = "plus.circle.fill"
 }

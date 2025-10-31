@@ -22,7 +22,6 @@ struct HomeView: View {
                     LazyVGrid(columns: viewModel.gridColumns, spacing: 2) {
                         ForEach(languages, id: \.id) { lang in
                             ZStack(alignment: .topTrailing) {
-                                
                                 NavigationLink(value: Route.languageStickiesView(lang)) {
                                     LanguageCardView(language: lang)
                                 }
