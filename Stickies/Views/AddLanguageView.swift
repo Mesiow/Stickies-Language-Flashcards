@@ -22,14 +22,13 @@ struct AddLanguageView: View {
     var body: some View {
         List(filteredLanguages) { lang in
             Button(action: {
-                let languageSelected = Language(code: lang.code, name: lang.name, flag: lang.flag)
+                let languageSelected = Language(code: lang.code, name: lang.name, image: lang.image)
                 viewModel.addLanguage(languageSelected)
                 
                 dismiss()
             }) {
                 HStack(spacing: 12) {
-                    Text(lang.flag)
-                        .font(.system(size: 28))
+                    FlagImageView(image: lang.image, width: 46, height: 36)
                     Text(lang.name)
                         .font(.headline)
                         .foregroundStyle(.gray)

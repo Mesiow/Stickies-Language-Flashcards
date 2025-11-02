@@ -8,21 +8,16 @@
 import SwiftUI
 
 struct LanguageCardView: View {
+    
     let language: Language
-    let offset: CGFloat = 4
+    
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(AppInfo.stickyNoteBackgroundTintColor)
-                .offset(y: offset)
-            
-            RoundedRectangle(cornerRadius: 6)
-                .foregroundStyle(AppInfo.stickyNoteTintColor)
-                .offset(y: 0)
+            StickyNoteStyleView()
             
             VStack(alignment: .center, spacing: 6) {
-                Text(language.flag)
-                    .font(.system(size: 34)) //slight increase for visual weight
+                FlagImageView(image: language.image, width: 46, height: 36)
+                
                 Text(language.name)
                     .fontWeight(.medium)
                     .padding(.top, 2)

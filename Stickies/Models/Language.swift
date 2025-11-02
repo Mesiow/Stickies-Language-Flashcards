@@ -15,16 +15,16 @@ class Language: Identifiable, Hashable {
     
     var code: String
     var name: String
-    var flag: String
+    var image: String
     
     @Relationship(deleteRule: .cascade)
     var stickies: [Sticky]
     
-    init(id: UUID = UUID(), code: String, name: String, flag: String, stickies: [Sticky] = []) {
+    init(id: UUID = UUID(), code: String, name: String, image: String, stickies: [Sticky] = []) {
         self.id = id
         self.code = code
         self.name = name
-        self.flag = flag
+        self.image = image
         self.stickies = stickies
     }
     

@@ -87,6 +87,9 @@ struct HomeView: View {
                     
                     case .languageStickiesView(let lang):
                         StickiesListView(language: lang)
+                    
+                    case .addNewSticky:
+                        NewStickyCardView()
                 }
             }
             .safeAreaInset(edge: .bottom) { //add button into safe area so that we dont block the last grid item
@@ -115,12 +118,14 @@ struct HomeView: View {
                             viewModel.isEditing.toggle()
                         }
                     }
+                    .tint(.black)
                     
                     Button {
                         
                     }label: {
                         Image(systemName: SFSymbols.ellipseCircle)
                     }
+                    .tint(.black)
                 }
             }
             .alert(viewModel.languageToDelete != nil ? "Are you sure you want to delete \(viewModel.languageToDelete?.name ?? "Name")?" : "Are you sure you want to delete this language?", isPresented: $viewModel.showDeleteLangConfirmation) {

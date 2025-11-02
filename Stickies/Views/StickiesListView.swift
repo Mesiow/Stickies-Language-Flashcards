@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StickiesListView: View {
     
+    @EnvironmentObject private var navigationModel: NavigationModel
     @Environment(\.dismiss) private var dismiss
     
     @Bindable var language: Language
@@ -20,9 +21,9 @@ struct StickiesListView: View {
     
     var exampleWords: [Sticky] {
         return [
-            Sticky(foreignWord: "Buenos Dias", translation: "Good Morning"),
-            Sticky(foreignWord: "Hola", translation: "Hello/Hi"),
-            Sticky(foreignWord: "Encontrar", translation: "To Find")
+            Sticky(language: Language(code: "es", name: "Spanish", image: "es-Spain"),foreignWord: "Buenos Dias", translation: "Good Morning"),
+            Sticky(language: Language(code: "es", name: "Spanish", image: "es-Spain"), foreignWord: "Hola", translation: "Hello/Hi"),
+            Sticky(language: Language(code: "es", name: "Spanish", image: "es-Spain"), foreignWord: "Encontrar", translation: "To Find")
         ]
     }
     
@@ -67,7 +68,7 @@ struct StickiesListView: View {
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button {
-                   
+                    navigationModel.push(.addNewSticky)
                 }label: {
                     Image(systemName: SFSymbols.plusCircleFill)
                         .foregroundStyle(AppInfo.actionButtonTintColor)

@@ -10,29 +10,26 @@ import SwiftUI
 struct StickyNoteCardView: View {
     
     var sticky: Sticky
-    let offset: CGFloat = 4
     
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(AppInfo.stickyNoteBackgroundTintColor)
-                .offset(y: offset)
-                .shadow(color: .black.opacity(0.1), radius: 1, y: 1)
-            
-            RoundedRectangle(cornerRadius: 6)
-                .foregroundStyle(AppInfo.stickyNoteTintColor)
-                .offset(y: 0)
+        ZStack(alignment: .topLeading) {
+           StickyNoteStyleView()
             
             HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(sticky.foreignWord)
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundColor(.black)
-                    Text(sticky.translation)
-                        .font(.system(size: 19, weight: .medium))
-                        .foregroundColor(.black)
-                }
                 Spacer()
+                FlagImageView(image: sticky.language.image, width: 24, height: 24)
+            }
+            .padding(.top, 8)
+            .padding(.horizontal, 8)
+            
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(sticky.foreignWord)
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundColor(.black)
+                Text(sticky.translation)
+                    .font(.system(size: 19, weight: .medium))
+                    .foregroundColor(.black)
             }
             .padding()
         }

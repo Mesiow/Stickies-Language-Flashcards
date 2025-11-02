@@ -19,7 +19,7 @@ final class HomeViewModel: ObservableObject {
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
-    let languages = popularLanguages.map { LanguageItem(code: $0.code, name: $0.name, flag: $0.flag) }
+    let languages = popularLanguages.map { LanguageItem(code: $0.code, name: $0.name, image: $0.image) }
     
     //Published state vars
     @Published var isEditing: Bool = false
