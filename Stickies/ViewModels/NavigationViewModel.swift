@@ -12,7 +12,6 @@ import Combine
 enum Route: Hashable {
     case addLanguage
     case languageStickiesView(Language)
-    case addNewSticky
 }
 
 enum PendingAction {

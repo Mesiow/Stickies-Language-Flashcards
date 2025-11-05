@@ -29,7 +29,7 @@ struct StickyNoteCardView: View {
                     .foregroundColor(.black)
                 Text(sticky.translation)
                     .font(.system(size: 19, weight: .medium))
-                    .foregroundColor(.black)
+                    .foregroundColor(.black.opacity(0.85))
             }
             .padding()
         }

@@ -87,9 +87,6 @@ struct HomeView: View {
                     
                     case .languageStickiesView(let lang):
                         StickiesListView(language: lang)
-                    
-                    case .addNewSticky:
-                        NewStickyCardView()
                 }
             }
             .safeAreaInset(edge: .bottom) { //add button into safe area so that we dont block the last grid item

@@ -39,4 +39,16 @@ final class HomeViewModel: ObservableObject {
         modelContext.delete(language) // this automatically deletes stickies too
         try? modelContext.save()
     }
+    
+    func addNewSticky(for language: Language, sticky: Sticky) {
+        language.stickies.append(sticky)
+        try? modelContext.save()
+    }
+    
+    func deleteSticky(for language: Language, sticky: Sticky) {
+        language.stickies.removeAll { s in
+            s.id == sticky.id
+        }
+        try? modelContext.save()
+    }
 }
