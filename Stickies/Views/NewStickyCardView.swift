@@ -9,16 +9,13 @@ import SwiftUI
 
 struct NewStickyCardView: View {
     
-    @EnvironmentObject private var viewModel: HomeViewModel
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @Environment(\.dismiss) private var dismiss
     
+    @StateObject private var viewModel = NewStickyCardViewModel()
+    
     @Bindable var language: Language
-    
-    @State private var foreignWord: String = ""
-    @State private var translation: String = ""
-    @State private var exampleSentence: String = ""
-    
-    @State private var showInputAlert = false
+    var existingSticky: Sticky?
     
     var body: some View {
         NavigationStack {
@@ -33,7 +30,7 @@ struct NewStickyCardView: View {
                         
                         // Input fields layered on top
                         VStack(alignment: .leading, spacing: 14) {
-                            TextField("Foreign word", text: $foreignWord)
+                            TextField("Foreign word", text: $viewModel.foreignWord)
                                 .font(.system(size: 28, weight: .semibold))
                                 .foregroundColor(.black)
                                 .padding(.horizontal)
@@ -42,7 +39,7 @@ struct NewStickyCardView: View {
                             Divider()
                                 .background(Color.black.opacity(0.15))
                             
-                            TextField("Translation", text: $translation)
+                            TextField("Translation", text: $viewModel.translation)
                                 .font(.system(size: 22, weight: .medium))
                                 .foregroundColor(.black.opacity(0.85))
                                 .padding(.horizontal)
@@ -51,7 +48,7 @@ struct NewStickyCardView: View {
                             Divider()
                                 .background(Color.black.opacity(0.15))
                             
-                            TextEditor(text: $exampleSentence)
+                            TextEditor(text: $viewModel.exampleSentence)
                                 .font(.system(size: 18, weight: .regular))
                                 .foregroundColor(.black.opacity(0.9))
                                 .frame(height: 160)
@@ -59,7 +56,7 @@ struct NewStickyCardView: View {
                                 .scrollContentBackground(.hidden)
                                 .background(Color.clear)
                                 .overlay(
-                                    Text(exampleSentence.isEmpty ? "Example sentence (optional)" : "")
+                                    Text(viewModel.exampleSentence.isEmpty ? "Example sentence (optional)" : "")
                                         .foregroundColor(.black.opacity(0.3))
                                         .font(.system(size: 18))
                                         .padding(.horizontal, 8)
@@ -76,24 +73,29 @@ struct NewStickyCardView: View {
                     Spacer()
                 }
             }
-            .navigationTitle("New Sticky")
+            .navigationTitle(existingSticky == nil ? "New Sticky" : "Edit Sticky")
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.interactively)
             .padding(.horizontal)
             .safeAreaInset(edge: .bottom) {
                 Button {
-                    guard !foreignWord.isEmpty, !translation.isEmpty else {
-                        showInputAlert = true
+                    guard !viewModel.foreignWord.isEmpty, !viewModel.translation.isEmpty else {
+                        viewModel.showInputAlert = true
                         return
                     }
                     
-                    //Add new sticky note card for the language and dismiss the view
-                    let newSticky = Sticky(language: language, foreignWord: foreignWord, translation: translation, examplePhrase: exampleSentence)
-                    viewModel.addNewSticky(for: language, sticky: newSticky)
+                    //Editing
+                    if let existing = existingSticky {
+                        homeViewModel.updateSticky(existing, foreignWord: viewModel.foreignWord, translation: viewModel.translation, exampleSentence: viewModel.exampleSentence)
+                    } else {
+                        //Add new sticky note card for the language
+                        let newSticky = Sticky(language: language, foreignWord: viewModel.foreignWord, translation: viewModel.translation, examplePhrase: viewModel.exampleSentence)
+                        homeViewModel.addNewSticky(for: language, sticky: newSticky)
+                    }
                     
                     dismiss()
                 }label: {
-                    Text("Create")
+                    Text(existingSticky == nil ? "Create" : "Save")
                         .fontWeight(.medium)
                         .font(.system(size: 20, weight: .semibold))
                         .padding(.vertical, 8)
@@ -115,7 +117,7 @@ struct NewStickyCardView: View {
                     }
                 }
             }
-            .alert("Sticky Note Empty", isPresented: $showInputAlert) {
+            .alert("Sticky Note Empty", isPresented: $viewModel.showInputAlert) {
                 Button("Ok", role: .cancel) { }
             }message: {
                 Text("You must enter a word and translation before creating")
@@ -123,6 +125,14 @@ struct NewStickyCardView: View {
             .background(
                 AppInfo.secondaryTintColor.opacity(0.35).ignoresSafeArea()
             )
+            .onAppear {
+                guard !viewModel.didLoadExisting else { return }
+                viewModel.didLoadExisting = true
+        
+                if let existing = existingSticky {
+                    viewModel.loadExisting(existingSticky: existing)
+                }
+            }
         }
     }
 }
