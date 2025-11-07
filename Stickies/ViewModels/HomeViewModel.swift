@@ -45,6 +45,13 @@ final class HomeViewModel: ObservableObject {
         try? modelContext.save()
     }
     
+    func updateSticky(_ sticky: Sticky, foreignWord: String, translation: String, exampleSentence: String) {
+        sticky.foreignWord = foreignWord
+        sticky.translation = translation
+        sticky.examplePhrase = exampleSentence
+        try? modelContext.save()
+    }
+    
     func deleteSticky(for language: Language, sticky: Sticky) {
         language.stickies.removeAll { s in
             s.id == sticky.id
