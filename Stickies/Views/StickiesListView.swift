@@ -16,6 +16,7 @@ struct StickiesListView: View {
     @Bindable var language: Language
     
     @State private var showNewStickyView = false
+    @State private var stickyCardToEdit: Sticky?
     @State private var isEditing = false
     
     //1 column for all items
@@ -55,6 +56,11 @@ struct StickiesListView: View {
                                 StickyNoteCardView(sticky: sticky)
                                     .offset(x: isEditing ? 28 : 0)  // slide right when editing
                                     .animation(.easeInOut(duration: 0.25), value: isEditing)
+                                    .onTapGesture {
+                                        if !isEditing {
+                                            stickyCardToEdit = sticky
+                                        }
+                                    }
                             }
                             .animation(.easeInOut(duration: 0.25), value: isEditing)
                         }
@@ -103,6 +109,9 @@ struct StickiesListView: View {
         )
         .fullScreenCover(isPresented: $showNewStickyView) {
             NewStickyCardView(language: language)
+        }
+        .fullScreenCover(item: $stickyCardToEdit) { sticky in
+            NewStickyCardView(language: language, existingSticky: sticky)
         }
     }
 }
