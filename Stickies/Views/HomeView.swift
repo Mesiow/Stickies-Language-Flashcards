@@ -19,7 +19,7 @@ struct HomeView: View {
         NavigationStack(path: $navigationModel.path) {
             ZStack {
                 ScrollView {
-                    LazyVGrid(columns: viewModel.gridColumns, spacing: 2) {
+                    LazyVGrid(columns: viewModel.gridColumns, spacing: 10) {
                         ForEach(languages, id: \.id) { lang in
                             ZStack(alignment: .topTrailing) {
                                 NavigationLink(value: Route.languageStickiesView(lang)) {
@@ -48,6 +48,7 @@ struct HomeView: View {
                         }
                     }
                     .padding(.horizontal)
+                    .padding(.vertical)
                 }
                 if languages.isEmpty {
                     VStack(spacing: 12) {
