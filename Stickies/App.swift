@@ -46,4 +46,6 @@ enum SFSymbols {
     static let giftFill = "gift.fill"
     static let infoCircle = "info.circle"
     static let plusCircleFill = "plus.circle.fill"
+    static let eye = "eye"
+    static let eyeSlash = "eye.slash"
 }

@@ -11,6 +11,7 @@ import Combine
 final class NewStickyCardViewModel: ObservableObject {
     @Published var foreignWord: String = ""
     @Published var translation: String = ""
+    @Published var pronunciation: String = ""
     @Published var exampleSentence: String = ""
     
     @Published var didLoadExisting = false //checks if we loaded an existing item for editing
@@ -19,6 +20,7 @@ final class NewStickyCardViewModel: ObservableObject {
     func loadExisting(existingSticky: Sticky) {
         foreignWord = existingSticky.foreignWord
         translation = existingSticky.translation
+        pronunciation = existingSticky.pronunciation ?? ""
         exampleSentence = existingSticky.examplePhrase ?? ""
     }
 }

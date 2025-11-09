@@ -14,6 +14,7 @@ struct LanguageCardView: View {
     var body: some View {
         ZStack {
             StickyNoteStyleView()
+            //StickyNoteStyleFlapView()
             
             VStack(alignment: .center, spacing: 6) {
                 FlagImageView(image: language.image, width: 46, height: 36)

@@ -14,6 +14,7 @@ struct StickiesListView: View {
     @Environment(\.dismiss) private var dismiss
     
     @Bindable var language: Language
+    @State private var stickiesSnapshot: [Sticky] = []
     
     @State private var showNewStickyView = false
     @State private var stickyCardToEdit: Sticky?
@@ -35,7 +36,7 @@ struct StickiesListView: View {
                         .foregroundStyle(Color(UIColor.lightGray))
                     
                     LazyVGrid(columns: gridColumns, spacing: 10) {
-                        ForEach(language.stickies, id: \.id) { sticky in
+                        ForEach(stickiesSnapshot, id: \.id) { sticky in
                             ZStack(alignment: .leading) {
                                 //Delete button shown in editing
                                 if isEditing {
@@ -55,18 +56,27 @@ struct StickiesListView: View {
                                 
                                 StickyNoteCardView(sticky: sticky)
                                     .offset(x: isEditing ? 28 : 0)  // slide right when editing
-                                    .animation(.easeInOut(duration: 0.25), value: isEditing)
                                     .onTapGesture {
                                         if !isEditing {
                                             stickyCardToEdit = sticky
                                         }
                                     }
                             }
-                            .animation(.easeInOut(duration: 0.25), value: isEditing)
+                            .transition(.asymmetric(
+                                insertion: .opacity,
+                                removal: .opacity.combined(with: .scale)
+                            ))
                         }
                     }
                     .padding(.vertical)
                     .padding(.horizontal, 4)
+                    .animation(.easeInOut(duration: 0.25), value: stickiesSnapshot.count)
+                    .onAppear { stickiesSnapshot = language.stickies }
+                    .onChange(of: language.stickies) { //snapshot needed for proper animation
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            stickiesSnapshot = language.stickies
+                        }
+                    }
                 }
                 .padding(.vertical, 4)
             }

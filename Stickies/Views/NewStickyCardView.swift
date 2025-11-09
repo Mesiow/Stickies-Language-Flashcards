@@ -32,7 +32,7 @@ struct NewStickyCardView: View {
                         VStack(alignment: .leading, spacing: 14) {
                             TextField("Foreign word", text: $viewModel.foreignWord)
                                 .font(.system(size: 28, weight: .semibold))
-                                .foregroundColor(.black)
+                                .foregroundStyle(.black)
                                 .padding(.horizontal)
                                 .textFieldStyle(.plain)
                             
@@ -41,7 +41,16 @@ struct NewStickyCardView: View {
                             
                             TextField("Translation", text: $viewModel.translation)
                                 .font(.system(size: 22, weight: .medium))
-                                .foregroundColor(.black.opacity(0.85))
+                                .foregroundStyle(.black.opacity(0.85))
+                                .padding(.horizontal)
+                                .textFieldStyle(.plain)
+                            
+                            Divider()
+                                .background(Color.black.opacity(0.15))
+                            
+                            TextField("Pronunciation", text: $viewModel.pronunciation)
+                                .font(.system(size: 22, weight: .medium))
+                                .foregroundStyle(.black.opacity(0.85))
                                 .padding(.horizontal)
                                 .textFieldStyle(.plain)
                             
@@ -86,10 +95,10 @@ struct NewStickyCardView: View {
                     
                     //Editing
                     if let existing = existingSticky {
-                        homeViewModel.updateSticky(existing, foreignWord: viewModel.foreignWord, translation: viewModel.translation, exampleSentence: viewModel.exampleSentence)
+                        homeViewModel.updateSticky(existing, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, exampleSentence: viewModel.exampleSentence)
                     } else {
                         //Add new sticky note card for the language
-                        let newSticky = Sticky(language: language, foreignWord: viewModel.foreignWord, translation: viewModel.translation, examplePhrase: viewModel.exampleSentence)
+                        let newSticky = Sticky(language: language, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, examplePhrase: viewModel.exampleSentence)
                         homeViewModel.addNewSticky(for: language, sticky: newSticky)
                     }
                     
