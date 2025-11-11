@@ -17,6 +17,7 @@ struct StickiesListView: View {
     @State private var stickiesSnapshot: [Sticky] = []
     
     @State private var showNewStickyView = false
+    @State private var showStudyModeView = false
     @State private var stickyCardToEdit: Sticky?
     @State private var isEditing = false
     
@@ -85,6 +86,7 @@ struct StickiesListView: View {
         .safeAreaInset(edge: .bottom) {
             Button {
                 // start study mode
+                showStudyModeView = true
             }label: {
                 Text("Begin Study")
                     .fontWeight(.medium)
@@ -122,6 +124,9 @@ struct StickiesListView: View {
         }
         .fullScreenCover(item: $stickyCardToEdit) { sticky in
             NewStickyCardView(language: language, existingSticky: sticky)
+        }
+        .fullScreenCover(isPresented: $showStudyModeView) {
+            StudyModeView(language: language)
         }
     }
 }

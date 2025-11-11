@@ -17,6 +17,14 @@ struct NewStickyCardView: View {
     @Bindable var language: Language
     var existingSticky: Sticky?
     
+    func fieldDivider() -> some View {
+        Divider()
+            .frame(height: 1 / UIScreen.main.scale)
+            .background(Color.black.opacity(0.15))
+            .padding(.vertical, 4)
+    }
+
+    
     var body: some View {
         NavigationStack {
             ScrollView(.vertical) {
@@ -36,8 +44,7 @@ struct NewStickyCardView: View {
                                 .padding(.horizontal)
                                 .textFieldStyle(.plain)
                             
-                            Divider()
-                                .background(Color.black.opacity(0.15))
+                            fieldDivider()
                             
                             TextField("Translation", text: $viewModel.translation)
                                 .font(.system(size: 22, weight: .medium))
@@ -45,8 +52,7 @@ struct NewStickyCardView: View {
                                 .padding(.horizontal)
                                 .textFieldStyle(.plain)
                             
-                            Divider()
-                                .background(Color.black.opacity(0.15))
+                            fieldDivider()
                             
                             TextField("Pronunciation", text: $viewModel.pronunciation)
                                 .font(.system(size: 22, weight: .medium))
@@ -54,8 +60,7 @@ struct NewStickyCardView: View {
                                 .padding(.horizontal)
                                 .textFieldStyle(.plain)
                             
-                            Divider()
-                                .background(Color.black.opacity(0.15))
+                            fieldDivider()
                             
                             TextEditor(text: $viewModel.exampleSentence)
                                 .font(.system(size: 18, weight: .regular))
@@ -75,8 +80,9 @@ struct NewStickyCardView: View {
                         }
                         .padding(.vertical, 24)
                         .padding(.horizontal, 16)
+                        .tint(AppInfo.mainTintColor)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 420, maxHeight: 450)
+                    .frame(maxWidth: .infinity, minHeight: 420, maxHeight: 460)
                     .padding(.horizontal, 6)
                     
                     Spacer()
@@ -85,6 +91,7 @@ struct NewStickyCardView: View {
             .navigationTitle(existingSticky == nil ? "New Sticky" : "Edit Sticky")
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.interactively)
+            .scrollIndicators(.hidden)
             .padding(.horizontal)
             .safeAreaInset(edge: .bottom) {
                 Button {

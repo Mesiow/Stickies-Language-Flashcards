@@ -44,10 +44,6 @@ struct StickiesApp: App {
     }
     
     func initAppearance(){
-       /* let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(AppInfo.secondaryTintColor.opacity(0.35))*/
-        
         UINavigationBar.appearance().largeTitleTextAttributes = [
             .foregroundColor: UIColor.black,
             .font: UIFont.rounded(ofSize: 34, weight: .bold)
@@ -60,21 +56,6 @@ struct StickiesApp: App {
         
         UINavigationBar.appearance().tintColor = .black
         UIBarButtonItem.appearance().tintColor = .black
-        
-        // Large navigation title (e.g. "Languages")
-       /* appearance.largeTitleTextAttributes = [
-            .font: UIFont.rounded(ofSize: 34, weight: .bold)
-        ]
-        
-        // Inline navigation title (smaller)
-        appearance.titleTextAttributes = [
-            .font: UIFont.rounded(ofSize: 17, weight: .semibold)
-        ]
-        UINavigationBar.appearance().standardAppearance = appearance
-        UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        UINavigationBar.appearance().compactAppearance = appearance
-        
-        UINavigationBar.appearance().tintColor = UIColor.black*/
     }
 
     var body: some Scene {
