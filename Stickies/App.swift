@@ -16,6 +16,8 @@ enum AppInfo {
     static let stickyNoteBackgroundTintColor = Color("StickyNoteBackgroundTintColor")
     static let actionButtonTintColor = Color("ActionButtonTintColor")
     static let actionButtonBackgroundTintColor = Color("ActionButtonBackgroundTintColor")
+    
+    static let backgroundColor = secondaryTintColor.opacity(0.35)
 }
 
 enum SFSymbols {
@@ -28,6 +30,8 @@ enum SFSymbols {
     static let share = "square.and.arrow.up"
     static let save = "square.and.arrow.down"
     static let checkmarkCircle = "checkmark.circle"
+    static let checkmarkCircleFill = "checkmark.circle.fill"
+    static let xmarkCircleFill = "xmark.circle.fill"
     static let checkmark = "checkmark"
     static let arrowClockwise = "arrow.clockwise"
     static let euro = "eurosign"
@@ -48,4 +52,6 @@ enum SFSymbols {
     static let plusCircleFill = "plus.circle.fill"
     static let eye = "eye"
     static let eyeSlash = "eye.slash"
+    static let chevronLeftTwo = "chevron.left.2"
+    static let chevronRightTwo = "chevron.right.2"
 }
