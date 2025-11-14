@@ -88,7 +88,7 @@ struct StickiesListView: View {
                 // start study mode
                 showStudyModeView = true
             }label: {
-                Text("Begin Study")
+                Text("Practice")
                     .fontWeight(.medium)
                     .font(.system(size: 20, weight: .semibold))
                     .padding(.vertical, 8)
@@ -117,7 +117,7 @@ struct StickiesListView: View {
             }
         }
         .background(
-            AppInfo.secondaryTintColor.opacity(0.35).ignoresSafeArea()
+            AppInfo.backgroundColor.ignoresSafeArea()
         )
         .fullScreenCover(isPresented: $showNewStickyView) {
             NewStickyCardView(language: language)

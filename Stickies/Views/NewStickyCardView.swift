@@ -139,7 +139,7 @@ struct NewStickyCardView: View {
                 Text("You must enter a word and translation before creating")
             }
             .background(
-                AppInfo.secondaryTintColor.opacity(0.35).ignoresSafeArea()
+                AppInfo.backgroundColor.ignoresSafeArea()
             )
             .onAppear {
                 guard !viewModel.didLoadExisting else { return }

@@ -143,7 +143,7 @@ struct HomeView: View {
                 Text("Deleting this language will also remove all of your sticky flashcards associated with it.")
             }
             .background(
-                AppInfo.secondaryTintColor.opacity(0.35).ignoresSafeArea()
+                AppInfo.backgroundColor.ignoresSafeArea()
             )
         }
     }

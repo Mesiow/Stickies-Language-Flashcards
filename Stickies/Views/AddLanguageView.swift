@@ -20,23 +20,26 @@ struct AddLanguageView: View {
     }
     
     var body: some View {
-        List(filteredLanguages) { lang in
-            Button(action: {
-                let languageSelected = Language(code: lang.code, name: lang.name, image: lang.image)
-                viewModel.addLanguage(languageSelected)
-                
-                dismiss()
-            }) {
-                HStack(spacing: 12) {
-                    FlagImageView(image: lang.image, width: 46, height: 36)
-                    Text(lang.name)
-                        .font(.headline)
-                        .foregroundStyle(.gray)
+        ZStack {
+            AppInfo.backgroundColor.ignoresSafeArea()
+            List(filteredLanguages) { lang in
+                Button(action: {
+                    let languageSelected = Language(code: lang.code, name: lang.name, image: lang.image)
+                    viewModel.addLanguage(languageSelected)
+                    
+                    dismiss()
+                }) {
+                    HStack(spacing: 12) {
+                        FlagImageView(image: lang.image, width: 46, height: 36)
+                        Text(lang.name)
+                            .font(.headline)
+                            .foregroundStyle(.gray)
+                    }
+                    .padding(.vertical, 6)
                 }
-                .padding(.vertical, 6)
             }
+            .listStyle(.insetGrouped)
         }
-        .listStyle(.insetGrouped)
         .searchable(text: $searchText, prompt: "Search languages")
         .navigationTitle("Add Language")
         .navigationBarTitleDisplayMode(.inline)
