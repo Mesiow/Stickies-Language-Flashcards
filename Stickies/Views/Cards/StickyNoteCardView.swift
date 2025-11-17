@@ -10,7 +10,7 @@ import SwiftUI
 struct StickyNoteCardView: View {
     
     var sticky: Sticky
-    @State private var isTranslationBlurred = true
+    //@State private var isTranslationBlurred = true
     
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -24,12 +24,14 @@ struct StickyNoteCardView: View {
             .padding(.horizontal, 8)
             
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .center) {
+                Spacer()
                 Text(sticky.foreignWord)
-                    .font(.system(size: 28, weight: .semibold))
+                    .font(.system(size: 29, weight: .semibold))
                     .foregroundStyle(.black)
+                Spacer()
                 //Blur translation unless user taps eye
-                HStack {
+              /*  HStack {
                     Text(sticky.translation)
                         .font(.system(size: 19, weight: .medium))
                         .foregroundStyle(.black.opacity(0.85))
@@ -54,11 +56,11 @@ struct StickyNoteCardView: View {
                         .foregroundStyle(.black.opacity(0.75))
                         .padding(.leading, 4)
                     }
-                }
+                }*/
             }
             .padding()
         }
-        .frame(maxWidth: .infinity, minHeight: 110, maxHeight: 130)
+        .frame(maxWidth: .infinity, minHeight: 90, maxHeight: 90)
         .padding(.horizontal)
     }
 }

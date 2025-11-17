@@ -38,7 +38,7 @@ struct NewStickyCardView: View {
                         
                         // Input fields layered on top
                         VStack(alignment: .leading, spacing: 14) {
-                            TextField("Foreign word", text: $viewModel.foreignWord)
+                            TextField("Word", text: $viewModel.foreignWord)
                                 .font(.system(size: 28, weight: .semibold))
                                 .foregroundStyle(.black)
                                 .padding(.horizontal)

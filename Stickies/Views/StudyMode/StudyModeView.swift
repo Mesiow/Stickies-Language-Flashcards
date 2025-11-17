@@ -7,20 +7,25 @@
 
 import SwiftUI
 
+enum SwipeDirection {
+    case left
+    case right
+}
+
 struct StudyModeView: View {
     
+    @StateObject private var viewModel = StudyModeViewModel()
     @Environment(\.dismiss) private var dismiss
     
     @Bindable var language: Language
     
     @State private var currentCardIndex: Int = 0
     @State private var dragOffset: CGSize = .zero
-    @State private var showEndStudyModeConfirmation = false
     @State private var nextCardBlur: CGFloat = 4.0 // control blur of next card to show
-    
-    let swipeThreshold: CGFloat = 150.0 //the threshold the card needs to reach on a swipe to be a successful swipe
     @State private var swipeOpacity: Double = 0 //controls tint and showing of checkmark/xmark when swiping
-
+    let swipeThreshold: CGFloat = 150.0 //the threshold the card needs to reach on a swipe to be a successful swipe
+    
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -66,21 +71,21 @@ struct StudyModeView: View {
                         }
                         .id(currentCardIndex)
                         .offset(x: dragOffset.width)
-                        .rotationEffect(.degrees(Double(dragOffset.width / 20)))
+                        .rotationEffect(.degrees(Double(dragOffset.width / 25)))
                         .overlay(
                             ZStack {
                                 // show X mark or checkmark icon when swiping
                                 if dragOffset.width > 0 {
                                     Image(systemName: SFSymbols.checkmarkCircleFill)
                                         .font(.system(size: 60, weight: .bold))
-                                        .foregroundStyle(.green.opacity(0.85))
+                                        .foregroundStyle(.green.opacity(0.75))
                                         .opacity(swipeOpacity)
                                         .offset(y: -60)
                                         .padding()
                                 } else if dragOffset.width < 0 {
                                     Image(systemName: SFSymbols.xmarkCircleFill)
                                         .font(.system(size: 60, weight: .bold))
-                                        .foregroundStyle(.red.opacity(0.85))
+                                        .foregroundStyle(.red.opacity(0.75))
                                         .opacity(swipeOpacity)
                                         .offset(y: -60)
                                         .padding()
@@ -98,8 +103,8 @@ struct StudyModeView: View {
                                 }
                                 .onEnded{ gesture in
                                     if abs(gesture.translation.width) > swipeThreshold {
-                                        let direction: CGFloat = gesture.translation.width > 0 ? 1 : -1 //right or left
-                                        swipe(direction: direction)
+                                        let direction: SwipeDirection = gesture.translation.width > 0 ? SwipeDirection.right : SwipeDirection.left //right or left
+                                        swipe(direction)
                                     }else {
                                         withAnimation(.easeInOut(duration: 0.25)) {
                                             //reset drag offset if not swiped enough
@@ -166,14 +171,14 @@ struct StudyModeView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
-                        showEndStudyModeConfirmation = true
+                        viewModel.showEndStudyModeConfirmation = true
                     }label: {
                         Image(systemName: SFSymbols.xmark)
                             .foregroundStyle(AppInfo.actionButtonTintColor)
                     }
                 }
             }
-            .alert("Are you sure you want to end study mode?", isPresented: $showEndStudyModeConfirmation) {
+            .alert("Are you sure you want to end study mode?", isPresented: $viewModel.showEndStudyModeConfirmation) {
                 Button("Yes", role: .destructive) {
                    dismiss()
                 }
@@ -184,12 +189,39 @@ struct StudyModeView: View {
             .background(
                 AppInfo.backgroundColor.ignoresSafeArea()
             )
+            .overlay(
+                VStack {
+                    if viewModel.showResults {
+                        StudyModeCompletedStatisticsView(
+                            correct: viewModel.correctCount,
+                            incorrect: viewModel.incorrectCount,
+                            onClose: {
+                                withAnimation(.spring()) {
+                                    viewModel.showResults = false
+                                    dismiss()
+                                }
+                            }
+                        )
+                    }
+                }
+            )
         }
     }
     
-    private func swipe(direction: CGFloat) {
+    private func swipe(_ direction: SwipeDirection) {
+        //Stats logic
+        if direction == .right {
+            viewModel.correctCount += 1
+        }else if direction == .left {
+            viewModel.incorrectCount += 1
+        }
+        
+        //-- Swipe animation logic --
+        
         // Slide current card offscreen
-        let offscreenX = direction * 800.0
+        let multiplier: CGFloat = direction == .right ? 1 : -1
+        let offscreenX = multiplier * 800.0
+        
         withAnimation(.easeInOut(duration: 0.25)) {
             dragOffset = CGSize(width: offscreenX, height: 0)
         }
@@ -205,15 +237,22 @@ struct StudyModeView: View {
         
         // After the animation, reveal the next card
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            //Reset for next card
             if currentCardIndex < language.stickies.count - 1 {
                 currentCardIndex += 1
+                
+                dragOffset = .zero
+                nextCardBlur = 4.0
             } else {
                 // end of deck, show stats screen etc..
-                
-                dismiss()
+                showStudyModeStatsView()
             }
-            dragOffset = .zero
-            nextCardBlur = 4.0
+        }
+    }
+    
+    private func showStudyModeStatsView(){
+        withAnimation(.spring()) {
+            viewModel.showResults = true
         }
     }
 }

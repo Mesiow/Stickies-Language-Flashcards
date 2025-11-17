@@ -81,24 +81,28 @@ struct StickiesListView: View {
                 }
                 .padding(.vertical, 4)
             }
+            .scrollIndicators(.hidden)
         }
         .navigationTitle(language.name)
         .safeAreaInset(edge: .bottom) {
-            Button {
-                // start study mode
-                showStudyModeView = true
-            }label: {
-                Text("Practice")
-                    .fontWeight(.medium)
-                    .font(.system(size: 20, weight: .semibold))
-                    .padding(.vertical, 8)
+            VStack {
+                Button {
+                    // start study mode
+                    showStudyModeView = true
+                }label: {
+                    Text("Practice")
+                        .fontWeight(.medium)
+                        .font(.system(size: 20, weight: .semibold))
+                        .padding(.vertical, 8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: 54)  // makes it stretch to the container width
+                .padding()
+                .buttonStyle(DepthButtonStyle(
+                    foregroundColor: AppInfo.actionButtonTintColor,
+                    backgroundColor: AppInfo.mainTintColor))
             }
-            .frame(maxWidth: .infinity, maxHeight: 54)  // makes it stretch to the container width
-            .padding()
-            .buttonStyle(DepthButtonStyle(
-                foregroundColor: AppInfo.actionButtonTintColor,
-                backgroundColor: AppInfo.mainTintColor))
-            
+            .padding(.top, 4)
+            .padding(.bottom, 4)
         }
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {

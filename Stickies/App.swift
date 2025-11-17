@@ -14,8 +14,14 @@ enum AppInfo {
     static let secondaryTintColor = Color("SecondaryAppTintColor")
     static let stickyNoteTintColor = Color("StickyNoteTintColor")
     static let stickyNoteBackgroundTintColor = Color("StickyNoteBackgroundTintColor")
+    
+    //Yellow Color
     static let actionButtonTintColor = Color("ActionButtonTintColor")
     static let actionButtonBackgroundTintColor = Color("ActionButtonBackgroundTintColor")
+    
+    //Red Color
+    static let secondaryButtonTintColor = Color("SecondaryButtonTintColor")
+    static let secondaryButtonBackgroundTintColor = Color("SecondaryButtonBackgroundTint")
     
     static let backgroundColor = secondaryTintColor.opacity(0.35)
 }
