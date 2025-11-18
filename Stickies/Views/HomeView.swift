@@ -84,7 +84,7 @@ struct HomeView: View {
                 //Navigate to route
                 switch route {
                     case .addLanguage:
-                        AddLanguageView()
+                        AddLanguageView(existingLanguages: languages)
                     
                     case .languageStickiesView(let lang):
                         StickiesListView(language: lang)

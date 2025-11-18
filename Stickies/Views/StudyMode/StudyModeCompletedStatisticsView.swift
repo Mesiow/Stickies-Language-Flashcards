@@ -27,7 +27,7 @@ struct StudyModeCompletedStatisticsView: View {
             
             // Popup card
             VStack(spacing: 15) {
-                Text("Study Results")
+                Text("Results")
                     .font(.title)
                     .fontWeight(.semibold)
                 
@@ -57,20 +57,22 @@ struct StudyModeCompletedStatisticsView: View {
                 .padding(.horizontal, 4)
                 .padding(.vertical, 4)
                 
-                Button {
-                    //Review mistakes
-                }label: {
-                    Text("Review Mistakes")
-                        .foregroundStyle(.white.opacity(0.85))
-                        .fontWeight(.medium)
-                        .font(.system(size: 18, weight: .semibold))
-                        .padding(.vertical, 8)
+                if incorrect > 0 {
+                    Button {
+                        //Review mistakes
+                    }label: {
+                        Text("Review Mistakes")
+                            .foregroundStyle(.white.opacity(0.85))
+                            .fontWeight(.medium)
+                            .font(.system(size: 18, weight: .semibold))
+                            .padding(.vertical, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 44)
+                    .padding(.horizontal)
+                    .buttonStyle(DepthButtonStyle(
+                        foregroundColor: AppInfo.secondaryButtonBackgroundTintColor,
+                        backgroundColor: AppInfo.secondaryButtonTintColor))
                 }
-                .frame(maxWidth: .infinity, maxHeight: 44)
-                .padding(.horizontal)
-                .buttonStyle(DepthButtonStyle(
-                    foregroundColor: AppInfo.secondaryButtonBackgroundTintColor,
-                    backgroundColor: AppInfo.secondaryButtonTintColor))
                 
                 Button {
                     onClose()
@@ -88,7 +90,7 @@ struct StudyModeCompletedStatisticsView: View {
             }
             .padding()
             .frame(maxWidth: 345)
-            .background(AppInfo.stickyNoteTintColor.opacity(0.75).ignoresSafeArea())
+            .background(AppInfo.stickyNoteTintColor.opacity(0.70).ignoresSafeArea())
             .cornerRadius(20)
             .padding()
             .offset(y: -80)

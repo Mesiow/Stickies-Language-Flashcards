@@ -13,6 +13,9 @@ struct AddLanguageView: View {
     @EnvironmentObject private var viewModel: HomeViewModel
     
     @State private var searchText = ""
+    @State private var showLanguageAlreadyExistsAlert = false
+    
+    var existingLanguages: [Language]
     
     var filteredLanguages: [LanguageItem] {
         if searchText.isEmpty { return viewModel.languages}
@@ -24,6 +27,13 @@ struct AddLanguageView: View {
             AppInfo.backgroundColor.ignoresSafeArea()
             List(filteredLanguages) { lang in
                 Button(action: {
+                    //Check if language already added
+                    let doesntExist = existingLanguages.filter { $0.code == lang.code && $0.name == lang.name }.count <= 0
+                    guard doesntExist else {
+                        showLanguageAlreadyExistsAlert = true
+                        return
+                    }
+                    
                     let languageSelected = Language(code: lang.code, name: lang.name, image: lang.image)
                     viewModel.addLanguage(languageSelected)
                     
@@ -43,5 +53,8 @@ struct AddLanguageView: View {
         .searchable(text: $searchText, prompt: "Search languages")
         .navigationTitle("Add Language")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("You have already added this language to your list", isPresented: $showLanguageAlreadyExistsAlert) {
+            Button("Ok", role: .cancel) { }
+        }
     }
 }
