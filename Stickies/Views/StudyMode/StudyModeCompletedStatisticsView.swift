@@ -21,9 +21,11 @@ struct StudyModeCompletedStatisticsView: View {
     var body: some View {
         ZStack {
             // Dim background
-            Color.black.opacity(0.25)
-                .ignoresSafeArea()
+            Rectangle()
+                .fill(.ultraThinMaterial.opacity(0.90))    // actual blur
+                .background(Color.black.opacity(0.25))  // dim
                 .transition(.opacity)
+                .ignoresSafeArea(.all)
             
             // Popup card
             VStack(spacing: 15) {
