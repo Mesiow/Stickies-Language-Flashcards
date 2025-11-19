@@ -25,6 +25,11 @@ struct StudyModeView: View {
     @State private var swipeOpacity: Double = 0 //controls tint and showing of checkmark/xmark when swiping
     let swipeThreshold: CGFloat = 150.0 //the threshold the card needs to reach on a swipe to be a successful swipe
     
+    //Float for the progress bar
+    var progress: CGFloat {
+        guard language.stickies.count > 0 else { return 0 }
+        return CGFloat(currentCardIndex + 1) / CGFloat(language.stickies.count)
+    }
     
     var body: some View {
         NavigationStack {
@@ -32,10 +37,19 @@ struct StudyModeView: View {
                 Spacer()
                     .frame(height: 60)
                 
-                Text("Sticky \(currentCardIndex + 1) \\ \(language.stickies.count)")
-                    .foregroundStyle(Color(UIColor.lightGray))
-                    .font(.system(size: 18))
-                    .fontWeight(.medium)
+                VStack(alignment: .center) {
+                    Text("Sticky \(currentCardIndex + 1) \\ \(language.stickies.count)")
+                        .foregroundStyle(Color(UIColor.lightGray))
+                        .font(.system(size: 18))
+                        .fontWeight(.medium)
+                    
+                    ProgressView(value: progress)
+                        .frame(width: 200)
+                        .progressViewStyle(.linear)
+                        .tint(AppInfo.mainTintColor)
+                        .animation(.easeInOut(duration: 0.25), value: progress)
+                }
+                .padding(.vertical, 4)
                 
                 ZStack{
                     if !language.stickies.isEmpty {
@@ -46,12 +60,19 @@ struct StudyModeView: View {
                             StickyNoteStyleView()
                                 .padding(.horizontal, 25)
                                 .overlay(
-                                    Text(nextSticky.foreignWord)
-                                        .font(.system(size: 32, weight: .semibold))
-                                        .foregroundStyle(.black)
-                                        .multilineTextAlignment(.center)
-                                        .blur(radius: nextCardBlur)
-                                        .padding()
+                                    VStack {
+                                        Text(nextSticky.foreignWord)
+                                            .font(.system(size: 32, weight: .semibold))
+                                            .foregroundStyle(.black)
+                                            .padding(.horizontal)
+                                        Text("Tap To Reveal")
+                                            .font(.system(size: 13, weight: .medium))
+                                            .foregroundStyle(.gray)
+                                            .opacity(0.8)
+                                            .padding(.top, 4)
+                                    }
+                                    .multilineTextAlignment(.center)
+                                    .blur(radius: nextCardBlur)
                                 )
                                 .animation(.easeInOut(duration: 0.3), value: nextCardBlur)
                         }
@@ -63,11 +84,18 @@ struct StudyModeView: View {
                             
                             let sticky = language.stickies[currentCardIndex]
                             
-                            Text(sticky.foreignWord)
-                                .font(.system(size: 32, weight: .semibold))
-                                .foregroundStyle(.black)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
+                            VStack {
+                                Text(sticky.foreignWord)
+                                    .font(.system(size: 32, weight: .semibold))
+                                    .foregroundStyle(.black)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                                Text("Tap To Reveal")
+                                    .font(.system(size: 13, weight: .medium))
+                                    .foregroundStyle(.gray)
+                                    .opacity(0.8)
+                                    .padding(.top, 4)
+                            }
                         }
                         .id(currentCardIndex)
                         .offset(x: dragOffset.width)
@@ -93,6 +121,10 @@ struct StudyModeView: View {
                             }
                             .padding(.horizontal, 25)
                         )
+                        .onTapGesture {
+                            #warning("TODO implement tap gesture for showing translation")
+                            print("sticky tapped")
+                        }
                         .gesture(
                             DragGesture()
                                 .onChanged{ gesture in
