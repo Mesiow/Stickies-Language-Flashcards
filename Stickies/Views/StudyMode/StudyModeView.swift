@@ -19,6 +19,7 @@ struct StudyModeView: View {
     
     @Bindable var language: Language
     
+    @State private var isCardFlipped: Bool = false
     @State private var currentCardIndex: Int = 0
     @State private var dragOffset: CGSize = .zero
     @State private var nextCardBlur: CGFloat = 4.0 // control blur of next card to show
@@ -77,24 +78,27 @@ struct StudyModeView: View {
                                 .animation(.easeInOut(duration: 0.3), value: nextCardBlur)
                         }
                         
+                        //Sticky flashcard
                         ZStack {
-                            //Current top card
-                            StickyNoteStyleView()
-                                .padding(.horizontal, 25)
-                            
-                            let sticky = language.stickies[currentCardIndex]
-                            
-                            VStack {
-                                Text(sticky.foreignWord)
-                                    .font(.system(size: 32, weight: .semibold))
-                                    .foregroundStyle(.black)
-                                    .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
-                                Text("Tap To Reveal")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundStyle(.gray)
-                                    .opacity(0.8)
-                                    .padding(.top, 4)
+                            ZStack {
+                                let sticky = language.stickies[currentCardIndex]
+                                if isCardFlipped {
+                                    StickyBackCardView(sticky: sticky)
+                                } else {
+                                    StickyFrontCardView(sticky: sticky)
+                                }
+                            }
+                            //Add rotation to only the card view to prevent swipe functionality from being inverted as well
+                            .rotation3DEffect(
+                                .degrees(isCardFlipped ? 180 : 0),
+                                axis: (x: 0, y: 1, z: 0),
+                                perspective: 0.25
+                            )
+                            .animation(.easeInOut(duration: 0.40), value: isCardFlipped)
+                            .onTapGesture {
+                                withAnimation {
+                                    isCardFlipped.toggle()
+                                }
                             }
                         }
                         .id(currentCardIndex)
@@ -121,10 +125,6 @@ struct StudyModeView: View {
                             }
                             .padding(.horizontal, 25)
                         )
-                        .onTapGesture {
-                            #warning("TODO implement tap gesture for showing translation")
-                            print("sticky tapped")
-                        }
                         .gesture(
                             DragGesture()
                                 .onChanged{ gesture in
@@ -241,13 +241,22 @@ struct StudyModeView: View {
     }
     
     private func swipe(_ direction: SwipeDirection) {
+        update(direction)
+        slideCardOffscreen(direction)
+    }
+    
+    //Update view model based on direction swiped
+    private func update(_ direction: SwipeDirection){
         //Stats logic
         if direction == .right {
             viewModel.correctCount += 1
         }else if direction == .left {
             viewModel.incorrectCount += 1
         }
-        
+    }
+    
+    //Slide card animation when swiping
+    private func slideCardOffscreen(_ direction: SwipeDirection){
         //-- Swipe animation logic --
         
         // Slide current card offscreen
@@ -275,6 +284,7 @@ struct StudyModeView: View {
                 
                 dragOffset = .zero
                 nextCardBlur = 4.0
+                isCardFlipped = false
             } else {
                 // end of deck, show stats screen etc..
                 showStudyModeStatsView()
