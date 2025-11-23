@@ -17,7 +17,7 @@ struct StudyModeView: View {
     @StateObject private var viewModel = StudyModeViewModel()
     @Environment(\.dismiss) private var dismiss
     
-    @Bindable var language: Language
+    @Bindable var deck: Deck
     
     @State private var isCardFlipped: Bool = false
     @State private var currentCardIndex: Int = 0
@@ -28,8 +28,8 @@ struct StudyModeView: View {
     
     //Float for the progress bar
     var progress: CGFloat {
-        guard language.stickies.count > 0 else { return 0 }
-        return CGFloat(currentCardIndex + 1) / CGFloat(language.stickies.count)
+        guard deck.stickies.count > 0 else { return 0 }
+        return CGFloat(currentCardIndex + 1) / CGFloat(deck.stickies.count)
     }
     
     var body: some View {
@@ -39,7 +39,7 @@ struct StudyModeView: View {
                     .frame(height: 60)
                 
                 VStack(alignment: .center) {
-                    Text("Sticky \(currentCardIndex + 1) \\ \(language.stickies.count)")
+                    Text("Sticky \(currentCardIndex + 1) \\ \(deck.stickies.count)")
                         .foregroundStyle(Color(UIColor.lightGray))
                         .font(.system(size: 18))
                         .fontWeight(.medium)
@@ -53,10 +53,10 @@ struct StudyModeView: View {
                 .padding(.vertical, 4)
                 
                 ZStack{
-                    if !language.stickies.isEmpty {
+                    if !deck.stickies.isEmpty {
                         //Next card underneath current card
-                        if currentCardIndex < language.stickies.count - 1 {
-                            let nextSticky = language.stickies[currentCardIndex + 1]
+                        if currentCardIndex < deck.stickies.count - 1 {
+                            let nextSticky = deck.stickies[currentCardIndex + 1]
                             
                             StickyNoteStyleView()
                                 .padding(.horizontal, 25)
@@ -81,7 +81,7 @@ struct StudyModeView: View {
                         //Sticky flashcard
                         ZStack {
                             ZStack {
-                                let sticky = language.stickies[currentCardIndex]
+                                let sticky = deck.stickies[currentCardIndex]
                                 if isCardFlipped {
                                     StickyBackCardView(sticky: sticky)
                                 } else {
@@ -279,7 +279,7 @@ struct StudyModeView: View {
         // After the animation, reveal the next card
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             //Reset for next card
-            if currentCardIndex < language.stickies.count - 1 {
+            if currentCardIndex < deck.stickies.count - 1 {
                 currentCardIndex += 1
                 
                 dragOffset = .zero

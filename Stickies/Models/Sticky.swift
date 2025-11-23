@@ -14,23 +14,43 @@ final class Sticky: Identifiable, Hashable {
     @Attribute(.unique) var id: UUID
     
     //each sticky is part of one language
-    @Relationship var language: Language
+    //@Relationship var language: Language
+    
+    //Each sticky is part of a deck
+    @Relationship var deck: Deck
     
     var foreignWord: String //word or phrase to learn
     var translation: String //on the back of the sticky
     var pronunciation: String? //how to pronounce the word correctly
     var examplePhrase: String?
-    var bucket: Int //bucket 0, 1, 2 for spaced repition (leitners system)
-    var nextReview: Date //when its due to review
     
-    init(id: UUID = UUID(), language: Language, foreignWord: String, translation: String, pronunciation: String? = nil, examplePhrase: String? = nil) {
+    var createdAt: Date
+   
+    //Fields for Strength Decay Based SRS (Spaced Repetition System)
+    //Each word has a “strength bar” that gradually weakens unless practiced.
+    var strength: Double? //value of 0.0 to 1.0 telling us how well we know the word,
+                         //0 = new word don't know well at all, 1 = fully mastered
+    var lastReviewedDate: Date? //the last time the card was reviewed, used for calculating how much strength should decay
+    var timesCorrect: Int? //how many times the user answered the card correctly
+    var timesIncorrect: Int? //how many times the user answered the card incorrectly
+    var isInMistakePool: Bool? //(used for reviewing mistakes, etc)
+    
+    
+    init(id: UUID = UUID(), deck: Deck, foreignWord: String, translation: String, pronunciation: String? = nil, examplePhrase: String? = nil) {
         self.id = id
-        self.language = language
+        self.deck = deck
         self.foreignWord = foreignWord
         self.translation = translation
         self.pronunciation = pronunciation
         self.examplePhrase = examplePhrase
-        self.bucket = 0 //new card starts at bucket 0
-        self.nextReview = Date() //immediate review
+        
+        self.createdAt = Date()
+        
+        //SRS vars
+        self.strength = 0.0 //every word starts at 0
+        self.lastReviewedDate = Date()
+        self.timesCorrect = 0
+        self.timesIncorrect = 0
+        self.isInMistakePool = false
     }
 }

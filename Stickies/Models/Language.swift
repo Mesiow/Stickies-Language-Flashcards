@@ -18,14 +18,14 @@ class Language: Identifiable, Hashable {
     var image: String
     
     @Relationship(deleteRule: .cascade)
-    var stickies: [Sticky]
+    var decks: [Deck]
     
-    init(id: UUID = UUID(), code: String, name: String, image: String, stickies: [Sticky] = []) {
+    init(id: UUID = UUID(), code: String, name: String, image: String, decks: [Deck] = []) {
         self.id = id
         self.code = code
         self.name = name
         self.image = image
-        self.stickies = stickies
+        self.decks = decks
     }
     
 }

@@ -36,12 +36,26 @@ final class HomeViewModel: ObservableObject {
     }
     
     func deleteLanguage(_ language: Language) {
-        modelContext.delete(language) // this automatically deletes stickies too
+        modelContext.delete(language) // this automatically deletes decks and their stickies too
         try? modelContext.save()
     }
     
-    func addNewSticky(for language: Language, sticky: Sticky) {
-        language.stickies.append(sticky)
+    //Deck Methods
+    func addNewDeck(for language: Language, deck: Deck){
+        language.decks.append(deck)
+        try? modelContext.save()
+    }
+    
+    func deleteDeck(for language: Language, deck: Deck) {
+        language.decks.removeAll { d in
+            d.id == deck.id
+        }
+        try? modelContext.save()
+    }
+    
+    //Sticky Note Methods
+    func addNewSticky(for deck: Deck, sticky: Sticky) {
+        deck.stickies.append(sticky)
         try? modelContext.save()
     }
     
@@ -53,8 +67,8 @@ final class HomeViewModel: ObservableObject {
         try? modelContext.save()
     }
     
-    func deleteSticky(for language: Language, sticky: Sticky) {
-        language.stickies.removeAll { s in
+    func deleteSticky(for deck: Deck, sticky: Sticky) {
+        deck.stickies.removeAll { s in
             s.id == sticky.id
         }
         try? modelContext.save()

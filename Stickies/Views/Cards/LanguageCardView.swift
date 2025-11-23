@@ -23,9 +23,9 @@ struct LanguageCardView: View {
                     .fontWeight(.medium)
                     .padding(.top, 2)
                 Text(
-                    language.stickies.isEmpty
-                    ? "No stickies yet"
-                    : "\(language.stickies.count) \(language.stickies.count == 1 ? "sticky" : "stickies")"
+                    language.decks.isEmpty
+                    ? "No decks yet"
+                    : "\(language.decks.count) \(language.decks.count == 1 ? "deck" : "decks")"
                 )
                 .multilineTextAlignment(.center)
                 .fontWeight(.regular)

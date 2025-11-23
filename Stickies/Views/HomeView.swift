@@ -22,7 +22,7 @@ struct HomeView: View {
                     LazyVGrid(columns: viewModel.gridColumns, spacing: 10) {
                         ForEach(languages, id: \.id) { lang in
                             ZStack(alignment: .topTrailing) {
-                                NavigationLink(value: Route.languageStickiesView(lang)) {
+                                NavigationLink(value: Route.languageDecksView(lang)) {
                                     LanguageCardView(language: lang)
                                 }
                                 .buttonStyle(.plain)
@@ -86,8 +86,11 @@ struct HomeView: View {
                     case .addLanguage:
                         AddLanguageView(existingLanguages: languages)
                     
-                    case .languageStickiesView(let lang):
-                        StickiesListView(language: lang)
+                    case .languageDecksView(let lang):
+                        DecksListView(language: lang)
+                    
+                    case .deckDetail(let deck):
+                        StickiesListView(deck: deck)
                 }
             }
             .safeAreaInset(edge: .bottom) { //add button into safe area so that we dont block the last grid item
@@ -140,7 +143,7 @@ struct HomeView: View {
                     viewModel.languageToDelete = nil
                 }
             }message: {
-                Text("Deleting this language will also remove all of your sticky flashcards associated with it.")
+                Text("Deleting this language will also remove all of your decks & sticky flashcards associated with it.")
             }
             .background(
                 AppInfo.backgroundColor.ignoresSafeArea()

@@ -18,7 +18,7 @@ struct StickyNoteCardView: View {
             
             HStack {
                 Spacer()
-                FlagImageView(image: sticky.language.image, width: 24, height: 24)
+                FlagImageView(image: sticky.deck.language.image, width: 24, height: 24)
             }
             .padding(.top, 8)
             .padding(.horizontal, 8)

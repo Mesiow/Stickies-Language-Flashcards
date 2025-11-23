@@ -11,7 +11,8 @@ import Combine
 //Navigation path
 enum Route: Hashable {
     case addLanguage
-    case languageStickiesView(Language)
+    case languageDecksView(Language)
+    case deckDetail(Deck)
 }
 
 enum PendingAction {

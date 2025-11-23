@@ -13,7 +13,7 @@ struct StickiesListView: View {
     @EnvironmentObject private var navigationModel: NavigationModel
     @Environment(\.dismiss) private var dismiss
     
-    @Bindable var language: Language
+    @Bindable var deck: Deck
     @State private var stickiesSnapshot: [Sticky] = []
     
     @State private var showNewStickyView = false
@@ -21,20 +21,27 @@ struct StickiesListView: View {
     @State private var stickyCardToEdit: Sticky?
     @State private var isEditing = false
     
+    @State private var showNoStickiesExistAlert = false
+    
     //1 column for all items
     let gridColumns = [
         GridItem(.flexible())
     ]
+    
+    private var sortedStickiesSnapshot: [Sticky] {
+        deck.stickies.sorted { $0.createdAt < $1.createdAt }
+    }
     
   
     var body: some View {
         ZStack {
             ScrollView {
                 VStack {
-                    Text("\(language.stickies.count) Sticky Notes")
+                    Text("\(deck.stickies.count) Sticky Notes")
                         .fontWeight(.regular)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(UIColor.lightGray))
+                        .padding(.vertical, 4)
                     
                     LazyVGrid(columns: gridColumns, spacing: 10) {
                         ForEach(stickiesSnapshot, id: \.id) { sticky in
@@ -43,7 +50,7 @@ struct StickiesListView: View {
                                 if isEditing {
                                     Button {
                                         withAnimation(.easeInOut(duration: 0.25)) {
-                                            viewModel.deleteSticky(for: language, sticky: sticky)
+                                            viewModel.deleteSticky(for: deck, sticky: sticky)
                                         }
                                     }label: {
                                         Image(systemName: SFSymbols.xmarkAppFill)
@@ -72,10 +79,10 @@ struct StickiesListView: View {
                     .padding(.vertical)
                     .padding(.horizontal, 4)
                     .animation(.easeInOut(duration: 0.25), value: stickiesSnapshot.count)
-                    .onAppear { stickiesSnapshot = language.stickies }
-                    .onChange(of: language.stickies) { //snapshot needed for proper animation
+                    .onAppear { stickiesSnapshot = sortedStickiesSnapshot }
+                    .onChange(of: deck.stickies) { //snapshot needed for proper animation
                         withAnimation(.easeInOut(duration: 0.25)) {
-                            stickiesSnapshot = language.stickies
+                            stickiesSnapshot = sortedStickiesSnapshot
                         }
                     }
                 }
@@ -83,10 +90,17 @@ struct StickiesListView: View {
             }
             .scrollIndicators(.hidden)
         }
-        .navigationTitle(language.name)
+        .navigationBarTitleDisplayMode(.large)
+        .navigationTitle(deck.name)
         .safeAreaInset(edge: .bottom) {
             VStack {
                 Button {
+                    //Only if stickies exist then we can practice
+                    guard deck.stickies.count > 0 else {
+                        showNoStickiesExistAlert = true
+                        return
+                    }
+                    
                     // start study mode
                     showStudyModeView = true
                 }label: {
@@ -120,17 +134,22 @@ struct StickiesListView: View {
                 }
             }
         }
+        .alert("No Sticky Flashcards exist", isPresented: $showNoStickiesExistAlert) {
+            Button("Ok", role: .cancel) { }
+        }message: {
+            Text("You have no sticky flashcards to study yet")
+        }
         .background(
             AppInfo.backgroundColor.ignoresSafeArea()
         )
         .fullScreenCover(isPresented: $showNewStickyView) {
-            NewStickyCardView(language: language)
+            NewStickyCardView(deck: deck)
         }
         .fullScreenCover(item: $stickyCardToEdit) { sticky in
-            NewStickyCardView(language: language, existingSticky: sticky)
+            NewStickyCardView(deck: deck, existingSticky: sticky)
         }
         .fullScreenCover(isPresented: $showStudyModeView) {
-            StudyModeView(language: language)
+            StudyModeView(deck: deck)
         }
     }
 }

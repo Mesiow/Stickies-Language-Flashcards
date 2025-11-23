@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+func fieldDivider() -> some View {
+    Divider()
+        .frame(height: 1 / UIScreen.main.scale)
+        .background(Color.black.opacity(0.15))
+        .padding(.vertical, 4)
+}
+
+
 struct NewStickyCardView: View {
     
     @EnvironmentObject private var homeViewModel: HomeViewModel
@@ -14,16 +22,8 @@ struct NewStickyCardView: View {
     
     @StateObject private var viewModel = NewStickyCardViewModel()
     
-    @Bindable var language: Language
+    @Bindable var deck: Deck
     var existingSticky: Sticky?
-    
-    func fieldDivider() -> some View {
-        Divider()
-            .frame(height: 1 / UIScreen.main.scale)
-            .background(Color.black.opacity(0.15))
-            .padding(.vertical, 4)
-    }
-
     
     var body: some View {
         NavigationStack {
@@ -105,8 +105,8 @@ struct NewStickyCardView: View {
                         homeViewModel.updateSticky(existing, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, exampleSentence: viewModel.exampleSentence)
                     } else {
                         //Add new sticky note card for the language
-                        let newSticky = Sticky(language: language, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, examplePhrase: viewModel.exampleSentence)
-                        homeViewModel.addNewSticky(for: language, sticky: newSticky)
+                        let newSticky = Sticky(deck: deck, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, examplePhrase: viewModel.exampleSentence)
+                        homeViewModel.addNewSticky(for: deck, sticky: newSticky)
                     }
                     
                     dismiss()
