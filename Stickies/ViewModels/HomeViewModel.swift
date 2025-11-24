@@ -59,7 +59,7 @@ final class HomeViewModel: ObservableObject {
         try? modelContext.save()
     }
     
-    func updateSticky(_ sticky: Sticky, foreignWord: String, translation: String, pronunciation: String, exampleSentence: String) {
+    func updateSticky(_ sticky: Sticky, foreignWord: String, translation: String, pronunciation: String?, exampleSentence: String?) {
         sticky.foreignWord = foreignWord
         sticky.translation = translation
         sticky.pronunciation = pronunciation

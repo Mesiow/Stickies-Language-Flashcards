@@ -22,14 +22,15 @@ struct StudyModeView: View {
     @State private var isCardFlipped: Bool = false
     @State private var currentCardIndex: Int = 0
     @State private var dragOffset: CGSize = .zero
-    @State private var nextCardBlur: CGFloat = 4.0 // control blur of next card to show
+    //@State private var nextCardBlur: CGFloat = 4.0 // control blur of next card to show
+    @State private var nextCardOpacity: CGFloat = 0.0
     @State private var swipeOpacity: Double = 0 //controls tint and showing of checkmark/xmark when swiping
     let swipeThreshold: CGFloat = 150.0 //the threshold the card needs to reach on a swipe to be a successful swipe
     
     //Float for the progress bar
     var progress: CGFloat {
-        guard deck.stickies.count > 0 else { return 0 }
-        return CGFloat(currentCardIndex + 1) / CGFloat(deck.stickies.count)
+        guard deck.sortedStickies.count > 0 else { return 0 }
+        return CGFloat(currentCardIndex + 1) / CGFloat(deck.sortedStickies.count)
     }
     
     var body: some View {
@@ -39,24 +40,34 @@ struct StudyModeView: View {
                     .frame(height: 60)
                 
                 VStack(alignment: .center) {
-                    Text("Sticky \(currentCardIndex + 1) \\ \(deck.stickies.count)")
+                    Text("Sticky \(currentCardIndex + 1) \\ \(deck.sortedStickies.count)")
                         .foregroundStyle(Color(UIColor.lightGray))
                         .font(.system(size: 18))
                         .fontWeight(.medium)
                     
-                    ProgressView(value: progress)
-                        .frame(width: 200)
-                        .progressViewStyle(.linear)
-                        .tint(AppInfo.mainTintColor)
-                        .animation(.easeInOut(duration: 0.25), value: progress)
+                    //Progress bar
+                    ZStack(alignment: .leading) {
+                        // OUTER capsule background
+                        Capsule()
+                            .fill(AppInfo.mainTintColor.opacity(0.25))
+                            .frame(width: 220, height: 24)
+                        
+                        // INNER progress bar capsule
+                        Capsule()
+                            .fill(AppInfo.mainTintColor)
+                            .frame(width: (220 - 10) * progress, height: 12)
+                            .padding(.horizontal, 5)
+                            
+                    }
+                    .animation(.easeInOut(duration: 0.25), value: progress)
                 }
                 .padding(.vertical, 4)
                 
                 ZStack{
-                    if !deck.stickies.isEmpty {
+                    if !deck.sortedStickies.isEmpty {
                         //Next card underneath current card
-                        if currentCardIndex < deck.stickies.count - 1 {
-                            let nextSticky = deck.stickies[currentCardIndex + 1]
+                        if currentCardIndex < deck.sortedStickies.count - 1 {
+                            let nextSticky = deck.sortedStickies[currentCardIndex + 1]
                             
                             StickyNoteStyleView()
                                 .padding(.horizontal, 25)
@@ -73,15 +84,17 @@ struct StudyModeView: View {
                                             .padding(.top, 4)
                                     }
                                     .multilineTextAlignment(.center)
-                                    .blur(radius: nextCardBlur)
+                                    .opacity(nextCardOpacity)
+                                    //.blur(radius: nextCardBlur)
+                                    
                                 )
-                                .animation(.easeInOut(duration: 0.3), value: nextCardBlur)
+                                .animation(.easeInOut(duration: 0.3), value: nextCardOpacity)
                         }
                         
                         //Sticky flashcard
                         ZStack {
                             ZStack {
-                                let sticky = deck.stickies[currentCardIndex]
+                                let sticky = deck.sortedStickies[currentCardIndex]
                                 if isCardFlipped {
                                     StickyBackCardView(sticky: sticky)
                                 } else {
@@ -269,7 +282,7 @@ struct StudyModeView: View {
         
         // Animate next card blur to clear
         withAnimation(.easeInOut(duration: 0.35)) {
-            nextCardBlur = 0.0
+            nextCardOpacity = 1.0
         }
         
         withAnimation(.easeOut(duration: 0.25)) {
@@ -283,7 +296,7 @@ struct StudyModeView: View {
                 currentCardIndex += 1
                 
                 dragOffset = .zero
-                nextCardBlur = 4.0
+                nextCardOpacity = 0.0
                 isCardFlipped = false
             } else {
                 // end of deck, show stats screen etc..

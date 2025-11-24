@@ -54,7 +54,10 @@ struct NewStickyCardView: View {
                             
                             fieldDivider()
                             
-                            TextField("Pronunciation", text: $viewModel.pronunciation)
+                            TextField("Pronunciation", text: Binding(
+                                get: { viewModel.pronunciation ?? "" },
+                                set: { viewModel.pronunciation = $0.isEmpty ? nil : $0 }
+                                ))
                                 .font(.system(size: 22, weight: .medium))
                                 .foregroundStyle(.black.opacity(0.85))
                                 .padding(.horizontal)
@@ -62,7 +65,10 @@ struct NewStickyCardView: View {
                             
                             fieldDivider()
                             
-                            TextEditor(text: $viewModel.exampleSentence)
+                            TextEditor(text: Binding(
+                                get: { viewModel.exampleSentence ?? "" },
+                                set: { viewModel.exampleSentence = $0.isEmpty ? nil : $0 }
+                                ))
                                 .font(.system(size: 18, weight: .regular))
                                 .foregroundColor(.black.opacity(0.9))
                                 .frame(height: 160)
@@ -70,7 +76,7 @@ struct NewStickyCardView: View {
                                 .scrollContentBackground(.hidden)
                                 .background(Color.clear)
                                 .overlay(
-                                    Text(viewModel.exampleSentence.isEmpty ? "Example sentence (optional)" : "")
+                                    Text(((viewModel.exampleSentence?.isEmpty) == nil) ? "Example sentence (optional)" : "")
                                         .foregroundColor(.black.opacity(0.3))
                                         .font(.system(size: 18))
                                         .padding(.horizontal, 8)

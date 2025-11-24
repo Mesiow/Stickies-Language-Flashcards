@@ -22,6 +22,10 @@ class Deck: Identifiable, Hashable {
     @Relationship(deleteRule: .cascade)
     var stickies: [Sticky]
     
+    var sortedStickies: [Sticky] {
+        stickies.sorted { $0.createdAt < $1.createdAt }
+    }
+
     init(id: UUID = UUID(), language: Language, name: String, stickies: [Sticky] = []) {
         self.id = id
         self.name = name
