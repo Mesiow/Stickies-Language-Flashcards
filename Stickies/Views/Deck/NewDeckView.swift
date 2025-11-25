@@ -46,7 +46,7 @@ struct NewDeckView: View {
                             fieldDivider()
                         }
                         .padding(.vertical, 24)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 24)
                         .tint(AppInfo.mainTintColor)
                     }
                     .frame(maxWidth: .infinity, minHeight: 350, maxHeight: 350)

@@ -27,7 +27,7 @@ struct DecksListView: View {
                 VStack {
                     NavTitleLanguageHeader(name: language.name, image: language.image)
 
-                    Text("\(language.decks.count) Decks")
+                    Text("\(language.decks.count) \(language.decks.count == 1 ? "Deck" : "Decks")")
                         .fontWeight(.regular)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(UIColor.lightGray))

@@ -22,7 +22,6 @@ struct StudyModeView: View {
     @State private var isCardFlipped: Bool = false
     @State private var currentCardIndex: Int = 0
     @State private var dragOffset: CGSize = .zero
-    //@State private var nextCardBlur: CGFloat = 4.0 // control blur of next card to show
     @State private var nextCardOpacity: CGFloat = 0.0
     @State private var swipeOpacity: Double = 0 //controls tint and showing of checkmark/xmark when swiping
     let swipeThreshold: CGFloat = 150.0 //the threshold the card needs to reach on a swipe to be a successful swipe
@@ -42,7 +41,7 @@ struct StudyModeView: View {
                 VStack(alignment: .center) {
                     Text("Sticky \(currentCardIndex + 1) \\ \(deck.sortedStickies.count)")
                         .foregroundStyle(Color(UIColor.lightGray))
-                        .font(.system(size: 18))
+                        .font(.system(size: 18, design: .rounded))
                         .fontWeight(.medium)
                     
                     //Progress bar
@@ -50,13 +49,13 @@ struct StudyModeView: View {
                         // OUTER capsule background
                         Capsule()
                             .fill(AppInfo.mainTintColor.opacity(0.25))
-                            .frame(width: 220, height: 24)
+                            .frame(width: 220, height: 22)
                         
                         // INNER progress bar capsule
                         Capsule()
                             .fill(AppInfo.mainTintColor)
-                            .frame(width: (220 - 10) * progress, height: 12)
-                            .padding(.horizontal, 5)
+                            .frame(width: (220 - 12) * progress, height: 8)
+                            .padding(.horizontal, 6)
                             
                     }
                     .animation(.easeInOut(duration: 0.25), value: progress)
