@@ -20,6 +20,8 @@ struct NewDeckView: View {
     @State private var color: Color = AppInfo.stickyNoteTintColor
     
     @State private var showNameAlreadyExistsAlert = false
+    @State private var showNameIsEmptyAlert = false
+    @FocusState private var isNameFocused: Bool
     
     var body: some View {
         NavigationStack {
@@ -36,6 +38,7 @@ struct NewDeckView: View {
                             HStack {
                                 Spacer()
                                 TextField("Deck name", text: $name)
+                                    .focused($isNameFocused)
                                     .font(.system(size: 28, weight: .semibold))
                                     .foregroundStyle(.black)
                                     .multilineTextAlignment(.center)
@@ -46,7 +49,7 @@ struct NewDeckView: View {
                             fieldDivider()
                         }
                         .padding(.vertical, 24)
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 36)
                         .tint(AppInfo.mainTintColor)
                     }
                     .frame(maxWidth: .infinity, minHeight: 350, maxHeight: 350)
@@ -95,10 +98,24 @@ struct NewDeckView: View {
             .alert("Deck name already exsists, choose another name", isPresented: $showNameAlreadyExistsAlert) {
                 Button("Ok", role: .cancel) { }
             }
+            .alert("Deck name is empty", isPresented: $showNameIsEmptyAlert) {
+                Button("Ok", role: .cancel) { }
+            }message: {
+                Text("You must enter a name for your deck")
+            }
+            .onAppear {
+                isNameFocused = true
+            }
         }
     }
     
     func createDeck(){
+        //Check if deck name is empty
+        guard !name.isEmpty else {
+            showNameIsEmptyAlert = true
+            return
+        }
+        
         //Check if deck name already exists
         let nameExists = language.decks.filter { $0.name == name }.count > 0
         guard !nameExists else {

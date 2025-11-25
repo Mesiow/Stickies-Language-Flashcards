@@ -98,5 +98,11 @@ struct StudyModeCompletedStatisticsView: View {
             .offset(y: -80)
             .transition(.scale.combined(with: .opacity))
         }
+        .onAppear {
+            //User finished practicing, fire haptic
+            let generator = UINotificationFeedbackGenerator()
+            generator.prepare()
+            generator.notificationOccurred(.success)
+        }
     }
 }
