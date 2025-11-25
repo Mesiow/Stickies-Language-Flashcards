@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+enum StrengthFilter {
+    case all, weak, medium, strong
+}
+
 struct StickiesListView: View {
     
     @EnvironmentObject private var viewModel: HomeViewModel
@@ -15,6 +19,7 @@ struct StickiesListView: View {
     
     @Bindable var deck: Deck
     @State private var stickiesSnapshot: [Sticky] = []
+    @State private var selectedFilter: StrengthFilter = .all
     
     @State private var showNewStickyView = false
     @State private var showStudyModeView = false
@@ -37,11 +42,14 @@ struct StickiesListView: View {
         ZStack {
             ScrollView {
                 VStack {
-                    Text("\(deck.stickies.count) Sticky Notes")
+                    Text("\(deck.stickies.count) \(deck.stickies.count == 1 ? "Sticky Card" : "Sticky Cards")")
                         .fontWeight(.regular)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(UIColor.lightGray))
                         .padding(.vertical, 4)
+                    
+                    //Filters
+                    strengthFiltersView
                     
                     LazyVGrid(columns: gridColumns, spacing: 10) {
                         ForEach(stickiesSnapshot, id: \.id) { sticky in
@@ -129,8 +137,11 @@ struct StickiesListView: View {
                 Button {
                     showNewStickyView = true
                 }label: {
-                    Image(systemName: SFSymbols.plusCircleFill)
-                        .foregroundStyle(AppInfo.actionButtonTintColor)
+                    HStack {
+                        Text("Add")
+                        Image(systemName: SFSymbols.plusCircleFill)
+                            .foregroundStyle(AppInfo.actionButtonTintColor)
+                    }
                 }
             }
         }
@@ -150,6 +161,47 @@ struct StickiesListView: View {
         }
         .fullScreenCover(isPresented: $showStudyModeView) {
             StudyModeView(deck: deck)
+        }
+    }
+    
+    //Strength Filters
+    var strengthFiltersView: some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 10) {
+                StrengthPillView(
+                    title: "All",
+                    isSelected: selectedFilter == .all,
+                    strengthLevel: .none
+                ) {
+                    selectedFilter = .all
+                }
+                
+                StrengthPillView(
+                    title: "Weak",
+                    isSelected: selectedFilter == .weak,
+                    strengthLevel: .weak
+                ) {
+                    selectedFilter = .weak
+                }
+                
+                StrengthPillView(
+                    title: "Medium",
+                    isSelected: selectedFilter == .medium,
+                    strengthLevel: .moderate
+                ) {
+                    selectedFilter = .medium
+                }
+                
+                StrengthPillView(
+                    title: "Strong",
+                    isSelected: selectedFilter == .strong,
+                    strengthLevel: .strong
+                ) {
+                    selectedFilter = .strong
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 6)
         }
     }
 }
