@@ -25,6 +25,7 @@ struct StickiesListView: View {
     @State private var showStudyModeView = false
     @State private var stickyCardToEdit: Sticky?
     @State private var isEditing = false
+    @State private var shuffleEnabled = false
     
     @State private var showNoStickiesExistAlert = false
     
@@ -42,14 +43,26 @@ struct StickiesListView: View {
         ZStack {
             ScrollView {
                 VStack {
+                    //Filters
+                    strengthFiltersView
+                    
+                    //Shuffle toggle
+                    HStack {
+                        ShuffleSliderToggle(isOn: $shuffleEnabled)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                   
+                    //Create new card button
+                    CreateNewStickyCardView {
+                        showNewStickyView = true
+                    }
+                    
                     Text("\(deck.stickies.count) \(deck.stickies.count == 1 ? "Sticky Card" : "Sticky Cards")")
                         .fontWeight(.regular)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(Color(UIColor.lightGray))
-                        .padding(.vertical, 4)
-                    
-                    //Filters
-                    strengthFiltersView
+                        .padding(.top, 4)
                     
                     LazyVGrid(columns: gridColumns, spacing: 10) {
                         ForEach(stickiesSnapshot, id: \.id) { sticky in
@@ -84,7 +97,7 @@ struct StickiesListView: View {
                             ))
                         }
                     }
-                    .padding(.vertical)
+                    .padding(.vertical, 6)
                     .padding(.horizontal, 4)
                     .animation(.easeInOut(duration: 0.25), value: stickiesSnapshot.count)
                     .onAppear { stickiesSnapshot = sortedStickiesSnapshot }
@@ -112,7 +125,7 @@ struct StickiesListView: View {
                     // start study mode
                     showStudyModeView = true
                 }label: {
-                    Text("Practice")
+                    Text("Review")
                         .fontWeight(.medium)
                         .font(.system(size: 20, weight: .semibold))
                         .padding(.vertical, 8)
@@ -137,11 +150,8 @@ struct StickiesListView: View {
                 Button {
                     showNewStickyView = true
                 }label: {
-                    HStack {
-                        Text("Add")
-                        Image(systemName: SFSymbols.plusCircleFill)
-                            .foregroundStyle(AppInfo.actionButtonTintColor)
-                    }
+                    Image(systemName: SFSymbols.plusCircleFill)
+                        .foregroundStyle(AppInfo.actionButtonTintColor)
                 }
             }
         }
@@ -161,6 +171,11 @@ struct StickiesListView: View {
         }
         .fullScreenCover(isPresented: $showStudyModeView) {
             StudyModeView(deck: deck)
+        }
+        .onAppear {
+            print("stickies list appeared")
+            //Update strength of sticky flashcards based on last reviewed date
+            SRSManager.shared.applyDecay(to: deck.stickies)
         }
     }
     

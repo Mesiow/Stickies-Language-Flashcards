@@ -11,6 +11,10 @@ struct StickyNoteCardView: View {
     
     var sticky: Sticky
     
+    private var strengthLevel: StrengthLevel {
+        return SRSManager.shared.strengthLevel(for: sticky)
+    }
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
            StickyNoteStyleView()
@@ -30,6 +34,16 @@ struct StickyNoteCardView: View {
                 Spacer()
             }
             .padding()
+        }
+        //Strength indicator
+        .overlay(alignment: .bottomTrailing) {
+            HStack(spacing: 2) {
+                ForEach(0..<strengthLevel.rawValue, id: \.self) { strength in
+                    StrengthIndicatorView(strength: strengthLevel, width: 8, height: 4)
+                }
+            }
+            .padding(.trailing, 12)
+            .padding(.bottom, 8)
         }
         .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 80)
         .padding(.horizontal)

@@ -13,4 +13,7 @@ final class StudyModeViewModel: ObservableObject {
     @Published var showResults = false
     @Published var correctCount = 0
     @Published var incorrectCount = 0
+    
+    //Strength Decay SRS (Spaced Repetition System) Methods
+    
 }
