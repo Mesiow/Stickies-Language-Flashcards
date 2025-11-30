@@ -241,6 +241,8 @@ struct StudyModeView: View {
                             correct: viewModel.correctCount,
                             incorrect: viewModel.incorrectCount,
                             onClose: {
+                                //Apply decay after completing review
+                                SRSManager.shared.applyDecay(to: deck.stickies)
                                 withAnimation(.spring()) {
                                     viewModel.showResults = false
                                     dismiss()
@@ -260,10 +262,13 @@ struct StudyModeView: View {
     
     //Update view model based on direction swiped
     private func update(_ direction: SwipeDirection){
+        let currentSticky = deck.sortedStickies[currentCardIndex]
         //Stats logic
         if direction == .right {
+            SRSManager.shared.markCorrect(currentSticky)
             viewModel.correctCount += 1
         }else if direction == .left {
+            SRSManager.shared.markIncorrect(currentSticky)
             viewModel.incorrectCount += 1
         }
     }
@@ -292,7 +297,7 @@ struct StudyModeView: View {
         // After the animation, reveal the next card
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             //Reset for next card
-            if currentCardIndex < deck.stickies.count - 1 {
+            if currentCardIndex < deck.sortedStickies.count - 1 {
                 currentCardIndex += 1
                 
                 dragOffset = .zero
