@@ -7,16 +7,35 @@
 
 import SwiftUI
 
-import SwiftUI
-
-enum PillStrengthLevel: Int {
+enum StrengthLevel: Int {
     case none, weak, moderate, strong
+    
+    var barColor: Color {
+        switch self {
+        case .weak: return Color.red
+        case .moderate: return Color.orange
+        case .strong: return Color.green
+        default: return Color.clear
+        }
+    }
+}
+
+struct StrengthIndicatorView: View {
+    let strength: StrengthLevel
+    var width: CGFloat = 6
+    var height: CGFloat = 3
+    
+    var body: some View {
+        Capsule()
+            .fill(strength.barColor)
+            .frame(width: width, height: height)
+    }
 }
 
 struct StrengthPillView: View {
     let title: String
     let isSelected: Bool
-    let strengthLevel: PillStrengthLevel    // 0 = none (for "All"), 1, 2, 3
+    let strengthLevel: StrengthLevel    // 0 = none (for "All"), 1, 2, 3
     let action: () -> Void
     
     // Strength colors
@@ -37,12 +56,10 @@ struct StrengthPillView: View {
                     
                 
                 // Bars indicator
-                if strengthLevel.rawValue != PillStrengthLevel.none.rawValue {
+                if strengthLevel.rawValue != StrengthLevel.none.rawValue {
                     HStack(spacing: 2) {
-                        ForEach(0..<strengthLevel.rawValue, id: \.self) { index in
-                            Capsule()
-                                .fill(barColor)
-                                .frame(width: 6, height: 3)
+                        ForEach(0..<strengthLevel.rawValue, id: \.self) { strength in
+                            StrengthIndicatorView(strength: strengthLevel)
                         }
                     }
                 }
@@ -60,16 +77,6 @@ struct StrengthPillView: View {
         }
         .animation(.easeInOut(duration: 0.2), value: isSelected)
         .buttonStyle(.plain)
-    }
-    
-    // Determine bar color based on strength level
-    private var barColor: Color {
-        switch strengthLevel {
-        case .weak: return weakColor
-        case .moderate: return mediumColor
-        case .strong: return strongColor
-        default: return .clear
-        }
     }
 }
 
