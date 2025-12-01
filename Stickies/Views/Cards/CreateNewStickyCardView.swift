@@ -18,7 +18,7 @@ struct CreateNewStickyCardView: View {
                     .resizable()
                     .scaledToFit()
                     .fontWeight(.semibold)
-                    .frame(width: 24, height: 24)
+                    .frame(width: 22, height: 22)
                     .foregroundStyle(.black.opacity(0.8))
                 
                 Text("Create new sticky note flashcard")
@@ -30,12 +30,12 @@ struct CreateNewStickyCardView: View {
                     .foregroundStyle(.black.opacity(0.7))
                     .multilineTextAlignment(.center)
             }
-            .padding(.vertical, 26)
+            .padding(.vertical, 20)
             .padding(.horizontal, 16)
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(AppInfo.stickyNoteTintColor.opacity(0.6))
+                    .fill(AppInfo.stickyNoteTintColor.opacity(0.55))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)

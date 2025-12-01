@@ -7,19 +7,6 @@
 
 import SwiftUI
 
-enum StrengthLevel: Int {
-    case none, weak, moderate, strong
-    
-    var barColor: Color {
-        switch self {
-        case .weak: return Color.red
-        case .moderate: return Color.orange
-        case .strong: return Color.green
-        default: return Color.clear
-        }
-    }
-}
-
 struct StrengthIndicatorView: View {
     let strength: StrengthLevel
     var width: CGFloat = 6

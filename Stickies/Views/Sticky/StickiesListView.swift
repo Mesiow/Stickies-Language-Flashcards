@@ -38,6 +38,12 @@ struct StickiesListView: View {
         deck.stickies.sorted { $0.createdAt < $1.createdAt }
     }
     
+    private var mistakePoolActive: Bool {
+        return deck.stickies.contains { sticky in
+            sticky.isInMistakePool == true
+        }
+    }
+    
   
     var body: some View {
         ZStack {
@@ -45,17 +51,16 @@ struct StickiesListView: View {
                 VStack {
                     //Filters
                     strengthFiltersView
-                    
-                    //Shuffle toggle
-                    HStack {
-                        ShuffleSliderToggle(isOn: $shuffleEnabled)
-                        Spacer()
-                    }
-                    .padding(.horizontal)
                    
                     //Create new card button
                     CreateNewStickyCardView {
                         showNewStickyView = true
+                    }
+                    
+                    if !deck.stickies.isEmpty {
+                        RecentMistakesCardView(active: mistakePoolActive) {
+                            //show recent mistakes view
+                        }
                     }
                     
                     Text("\(deck.stickies.count) \(deck.stickies.count == 1 ? "Sticky Card" : "Sticky Cards")")
@@ -91,19 +96,20 @@ struct StickiesListView: View {
                                         }
                                     }
                             }
-                            .transition(.asymmetric(
-                                insertion: .opacity,
-                                removal: .opacity.combined(with: .scale)
-                            ))
+                            .transition(.opacity)
                         }
                     }
                     .padding(.vertical, 6)
                     .padding(.horizontal, 4)
                     .animation(.easeInOut(duration: 0.25), value: stickiesSnapshot.count)
-                    .onAppear { stickiesSnapshot = sortedStickiesSnapshot }
+                    .onAppear {
+                        stickiesSnapshot = sortedStickiesSnapshot
+                        applyStrengthFilter()
+                    }
                     .onChange(of: deck.stickies) { //snapshot needed for proper animation
                         withAnimation(.easeInOut(duration: 0.25)) {
                             stickiesSnapshot = sortedStickiesSnapshot
+                            applyStrengthFilter()
                         }
                     }
                 }
@@ -172,6 +178,11 @@ struct StickiesListView: View {
         .fullScreenCover(isPresented: $showStudyModeView) {
             StudyModeView(deck: deck)
         }
+        .onChange(of: selectedFilter) {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                applyStrengthFilter()
+            }
+        }
         .onAppear {
             print("stickies list appeared")
             //Update strength of sticky flashcards based on last reviewed date
@@ -217,6 +228,30 @@ struct StickiesListView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 6)
+        }
+    }
+    
+    private func applyStrengthFilter() {
+        let all = sortedStickiesSnapshot
+
+        switch selectedFilter {
+        case .all:
+            stickiesSnapshot = all
+
+        case .weak:
+            stickiesSnapshot = all.filter {
+                SRSManager.shared.strengthLevel(for: $0) == .weak
+            }
+
+        case .medium:
+            stickiesSnapshot = all.filter {
+                SRSManager.shared.strengthLevel(for: $0) == .moderate
+            }
+
+        case .strong:
+            stickiesSnapshot = all.filter {
+                SRSManager.shared.strengthLevel(for: $0) == .strong
+            }
         }
     }
 }

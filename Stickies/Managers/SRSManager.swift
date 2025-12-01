@@ -7,19 +7,25 @@
 
 import SwiftUI
 
+enum StrengthLevel: Int {
+    case none, weak, moderate, strong
+    
+    var barColor: Color {
+        switch self {
+        case .weak: return Color.red
+        case .moderate: return Color.orange
+        case .strong: return Color.green
+        default: return Color.clear
+        }
+    }
+}
+
 //Strength Decay based SRS (Spaced Repetition System) Manager
 final class SRSManager {
     static let shared = SRSManager()
     private init() { }
     
     // MARK: - Strength Levels
-    /*enum StrengthLevel {
-        case weak
-        case medium
-        case strong
-        case unknown
-    }*/
-    
     func strengthLevel(for sticky: Sticky) -> StrengthLevel {
         if let strength = sticky.strength {
             switch strength {
@@ -43,7 +49,6 @@ final class SRSManager {
         let strengthRate = 0.15
         sticky.strength = min(1.0, strength + strengthRate)
         sticky.isInMistakePool = false
-        print("correct")
     }
     
     func markIncorrect(_ sticky: Sticky) {
@@ -56,7 +61,6 @@ final class SRSManager {
         let strengthDecayRate = 0.25
         sticky.strength = max(0.0, strength - strengthDecayRate)
         sticky.isInMistakePool = true
-        print("incorrect")
     }
     
     //MARK: - Decay methods
