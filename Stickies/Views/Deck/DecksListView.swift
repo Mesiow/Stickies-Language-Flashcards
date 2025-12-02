@@ -77,9 +77,7 @@ struct DecksListView: View {
             }
             .scrollIndicators(.hidden)
         }
-        //.navigationTitle(language.name)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
             VStack {
                 Button {
