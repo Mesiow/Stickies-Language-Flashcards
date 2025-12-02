@@ -24,6 +24,7 @@ struct NewStickyCardView: View {
     
     @Bindable var deck: Deck
     var existingSticky: Sticky?
+    @FocusState private var isWordFocused: Bool
     
     var body: some View {
         NavigationStack {
@@ -39,6 +40,7 @@ struct NewStickyCardView: View {
                         // Input fields layered on top
                         VStack(alignment: .leading, spacing: 14) {
                             TextField("Word", text: $viewModel.foreignWord)
+                                .focused($isWordFocused)
                                 .font(.system(size: 28, weight: .semibold))
                                 .foregroundStyle(.black)
                                 .padding(.horizontal)
@@ -153,6 +155,9 @@ struct NewStickyCardView: View {
         
                 if let existing = existingSticky {
                     viewModel.loadExisting(existingSticky: existing)
+                }else {
+                    //Focus textfield if new sticky
+                    isWordFocused = true
                 }
             }
         }
