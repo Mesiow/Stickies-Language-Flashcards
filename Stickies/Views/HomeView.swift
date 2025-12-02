@@ -91,6 +91,9 @@ struct HomeView: View {
                     
                     case .deckDetail(let deck):
                         StickiesListView(deck: deck)
+                    
+                    case .recentMistakesView(let deck):
+                        RecentMistakesListView(deck: deck)
                 }
             }
             .safeAreaInset(edge: .bottom) { //add button into safe area so that we dont block the last grid item
