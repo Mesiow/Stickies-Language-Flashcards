@@ -13,6 +13,7 @@ enum Route: Hashable {
     case addLanguage
     case languageDecksView(Language)
     case deckDetail(Deck)
+    case recentMistakesView(Deck)
 }
 
 enum PendingAction {
