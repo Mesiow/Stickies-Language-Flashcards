@@ -44,6 +44,10 @@ struct StickiesListView: View {
         }
     }
     
+    private var stickiesInMistakePool: [Sticky] {
+        sortedStickiesSnapshot.filter { $0.isInMistakePool == true }
+    }
+    
   
     var body: some View {
         ZStack {
@@ -60,6 +64,7 @@ struct StickiesListView: View {
                     if !deck.stickies.isEmpty {
                         RecentMistakesCardView(active: mistakePoolActive) {
                             //show recent mistakes view
+                            navigationModel.push(.recentMistakesView(deck))
                         }
                     }
                     
@@ -137,13 +142,14 @@ struct StickiesListView: View {
                         .padding(.vertical, 8)
                 }
                 .frame(maxWidth: .infinity, maxHeight: 54)  // makes it stretch to the container width
-                .padding()
+                .padding(.horizontal)
+                .padding(.bottom)
                 .buttonStyle(DepthButtonStyle(
                     foregroundColor: AppInfo.actionButtonTintColor,
                     backgroundColor: AppInfo.mainTintColor))
             }
-            .padding(.top, 4)
-            .padding(.bottom, 4)
+            .background(AppInfo.stickyNoteTintColor.opacity(0.60))
+            .ignoresSafeArea()
         }
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
