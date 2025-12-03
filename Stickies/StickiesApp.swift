@@ -61,6 +61,7 @@ struct StickiesApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .tint(.black)
                 .preferredColorScheme(.light) //app is designed for light mode only (looks better)
                 .environmentObject(homeViewModel)
                 .environmentObject(navigationModel)
