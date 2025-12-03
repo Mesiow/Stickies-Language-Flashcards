@@ -13,7 +13,7 @@ struct StickyFrontCardView: View {
     var body: some View {
         ZStack {
             StickyNoteStyleView()
-                .padding(.horizontal, 25)
+                //.padding(.horizontal, 25)
             
             VStack {
                 Text(sticky.foreignWord)
@@ -28,5 +28,7 @@ struct StickyFrontCardView: View {
                     .padding(.top, 4)
             }
         }
+        .frame(maxWidth: .infinity, minHeight: 350, maxHeight: 350)
+        .padding(.horizontal, 25)
     }
 }

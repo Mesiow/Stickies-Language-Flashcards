@@ -69,26 +69,25 @@ struct StudyModeView: View {
                         if currentCardIndex < deck.sortedStickies.count - 1 {
                             let nextSticky = deck.sortedStickies[currentCardIndex + 1]
                             
-                            StickyNoteStyleView()
-                                .padding(.horizontal, 25)
-                                .overlay(
-                                    VStack {
-                                        Text(nextSticky.foreignWord)
-                                            .font(.system(size: 32, weight: .semibold))
-                                            .foregroundStyle(.black)
-                                            .padding(.horizontal)
-                                        Text("Tap To Reveal")
-                                            .font(.system(size: 13, weight: .medium))
-                                            .foregroundStyle(.gray)
-                                            .opacity(0.8)
-                                            .padding(.top, 4)
-                                    }
-                                    .multilineTextAlignment(.center)
-                                    .opacity(nextCardOpacity)
-                                    //.blur(radius: nextCardBlur)
-                                    
-                                )
+                            ZStack {
+                                StickyNoteStyleView()
+                                VStack {
+                                    Text(nextSticky.foreignWord)
+                                        .font(.system(size: 32, weight: .semibold))
+                                        .foregroundStyle(.black)
+                                        .padding(.horizontal)
+                                    Text("Tap To Reveal")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundStyle(.gray)
+                                        .opacity(0.8)
+                                        .padding(.top, 4)
+                                }
+                                .multilineTextAlignment(.center)
+                                .opacity(nextCardOpacity)
                                 .animation(.easeInOut(duration: 0.3), value: nextCardOpacity)
+                            }
+                            .frame(maxWidth: .infinity, minHeight: 350, maxHeight: 350)
+                            .padding(.horizontal, 25)
                         }
                         
                         //Sticky flashcard

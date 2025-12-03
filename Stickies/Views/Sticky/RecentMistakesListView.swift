@@ -19,7 +19,7 @@ struct RecentMistakesListView: View {
         ZStack {
             ScrollView(.vertical){
                 VStack {
-                    LazyVGrid(columns: [GridItem(.flexible())], spacing: 10) {
+                    LazyVGrid(columns: [GridItem(.flexible())], spacing: 22) {
                         ForEach(stickiesInMistakePool, id: \.id) { sticky in
                             StickyNoteCardMistakeView(sticky: sticky)
                         }
@@ -27,6 +27,7 @@ struct RecentMistakesListView: View {
                     .padding(.vertical, 6)
                     .padding(.horizontal, 4)
                 }
+                .padding(.vertical, 4)
             }
         }
         .navigationBarTitleDisplayMode(.large)

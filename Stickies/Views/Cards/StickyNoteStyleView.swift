@@ -24,19 +24,4 @@ struct StickyNoteStyleView: View {
                 .offset(y: 0)
         }
     }
-    
-    /*func frontColor() -> Color {
-        let front = color?.wrappedValue ?? AppInfo.stickyNoteTintColor
-        return front
-    }
-    
-    func backColor() -> Color {
-        var back = AppInfo.stickyNoteBackgroundTintColor
-        if let color = color {
-            if color.wrappedValue != frontColor() {
-                back = frontColor().darken(by: 0.05)
-            }
-        }
-        return back
-    }*/
 }

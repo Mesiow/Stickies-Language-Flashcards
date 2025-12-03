@@ -13,7 +13,6 @@ struct StickyBackCardView: View {
     var body: some View {
         ZStack {
             StickyNoteStyleView()
-                .padding(.horizontal, 25)
             
             VStack {
                 Text(sticky.translation)   // translation
@@ -43,6 +42,8 @@ struct StickyBackCardView: View {
             }
             .padding(.horizontal, 8)
         }
+        .frame(maxWidth: .infinity, minHeight: 350, maxHeight: 350)
+        .padding(.horizontal, 25)
         .rotation3DEffect(.degrees(180), axis: (0, 1, 0))
     }
 }
