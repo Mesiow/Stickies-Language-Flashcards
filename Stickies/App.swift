@@ -24,6 +24,10 @@ enum AppInfo {
     static let secondaryButtonBackgroundTintColor = Color("SecondaryButtonBackgroundTint")
     
     static let backgroundColor = secondaryTintColor.opacity(0.35)
+    
+    //Character image names
+    static let sadCharacter = "character-sad"
+    static let excitedCharacter = "character-excited"
 }
 
 enum SFSymbols {
