@@ -76,6 +76,11 @@ struct DecksListView: View {
                 .padding(.vertical, 4)
             }
             .scrollIndicators(.hidden)
+            
+            if decksSnapshot.isEmpty {
+                CustomContentUnavailableView(label: "No decks yet", image: AppInfo.sadCharacter, description: "To get started, tap the + new deck button")
+                .animation(.easeInOut(duration: 0.3), value: decksSnapshot)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
