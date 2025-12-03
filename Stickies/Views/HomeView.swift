@@ -51,32 +51,8 @@ struct HomeView: View {
                     .padding(.vertical)
                 }
                 if languages.isEmpty {
-                    VStack(spacing: 12) {
-                        Spacer(minLength: 0) // ensures it starts below nav/title
-                        ContentUnavailableView {
-                            Label{
-                                Text("No languages yet")
-                                    .foregroundStyle(.primary)
-                            }icon: {
-                                Image("icon")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 70, height: 70)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                            }
-                        }description: {
-                            Text("To get started, tap the + add button to add a language")
-                                .foregroundStyle(.gray)
-                        }
-                        
-                        Spacer()
-                    }
-                    .allowsHitTesting(false)
-                    .ignoresSafeArea(edges: [.horizontal, .bottom]) // don't ignore top
-                    .transition(.opacity)
-                    .animation(.easeInOut(duration: 0.3), value: languages)
-                    .background(Color.clear) // no background covering the nav
-                    
+                    CustomContentUnavailableView(label: "No languages yet", image: AppInfo.sadCharacter, description: "To get started, tap the + add button to add a language")
+                        .animation(.easeInOut(duration: 0.3), value: languages)
                 }
             }
             .navigationTitle("Languages")
@@ -105,12 +81,15 @@ struct HomeView: View {
                     } label: {
                         Image(systemName: SFSymbols.plus)
                             .font(.system(size: 22, weight: .bold))
-                            .foregroundStyle(AppInfo.secondaryTintColor)
-                            .frame(width: 56, height: 56)
-                            .background(AppInfo.mainTintColor)
-                            .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.3), radius: 6, x: 0, y: 3)
+                            .foregroundStyle(.white)
                     }
+                    .frame(width: 56, height: 56)
+                    .buttonStyle(
+                        DepthCircleButtonStyle(
+                            foregroundColor: AppInfo.actionButtonTintColor,
+                            backgroundColor: AppInfo.mainTintColor
+                        )
+                    )
                     .padding(.trailing, 32)
                     .padding(.bottom, 32)
                 }
