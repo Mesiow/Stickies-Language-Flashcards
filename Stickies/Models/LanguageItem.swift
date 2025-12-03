@@ -37,5 +37,5 @@ let popularLanguages: [(code: String, name: String, image: String)] = [
     ("el", "Greek", "gr-Greece"),
     ("th", "Thai", "th-Thailand"),
     ("vi", "Vietnamese", "vn-Vietnam"),
-    ("id", "Indonesia", "id-Indonesia")
+    ("id", "Indonesian", "id-Indonesia")
 ]
