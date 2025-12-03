@@ -27,3 +27,28 @@ struct DepthButtonStyle: ButtonStyle {
         }
     }
 }
+
+struct DepthCircleButtonStyle: ButtonStyle {
+    let foregroundColor: Color
+    let backgroundColor: Color
+    let offset: CGFloat = 2
+    
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack {
+            // BACK circle (shadow layer)
+            Circle()
+                .foregroundStyle(backgroundColor)
+                .offset(y: offset)
+            
+            // FRONT circle (top layer)
+            Circle()
+                .foregroundStyle(foregroundColor)
+                .offset(y: configuration.isPressed ? offset : 0)
+            
+            // BUTTON CONTENT
+            configuration.label
+                .offset(y: configuration.isPressed ? offset : 0)
+        }
+    }
+}
+
