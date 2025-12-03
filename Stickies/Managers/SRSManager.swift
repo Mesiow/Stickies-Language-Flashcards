@@ -18,6 +18,26 @@ enum StrengthLevel: Int {
         default: return Color.clear
         }
     }
+    
+    var dailyDecayRate: Double {
+        switch self {
+        case .weak: 0.10 //10%  per day
+        case .moderate: 0.05 //5%
+        case .strong: 0.02 //2%
+        case .none: 0.08
+        }
+    }
+    
+    //Rate used for when the user gets a card incorrect/forgets a card
+    var penaltyDecayRate: Double {
+        switch self {
+        case .weak, .moderate: 0.25 //-25%
+        case .strong: 0.15 //-15%, less penalty if card is already strong
+        case .none: 0.25
+        }
+    }
+    
+    static var strengthRate: Double = 0.15 //+15% for when correct answer
 }
 
 //Strength Decay based SRS (Spaced Repetition System) Manager
@@ -31,7 +51,7 @@ final class SRSManager {
             switch strength {
             case 0.0..<0.33: return .weak
             case 0.33..<0.66: return .moderate
-            default: return .strong
+            default: return .strong //0.66 - 1.0
             }
         }
         return .none
@@ -46,7 +66,8 @@ final class SRSManager {
         guard let strength = sticky.strength else { return }
         
         //set new strength to current strength + 15% more
-        let strengthRate = 0.15
+        let strengthRate = StrengthLevel.strengthRate
+        
         sticky.strength = min(1.0, strength + strengthRate)
         sticky.isInMistakePool = false
     }
@@ -57,9 +78,11 @@ final class SRSManager {
         
         guard let strength = sticky.strength else { return }
         
-        //set new strength to current strength - 25% decay rate
-        let strengthDecayRate = 0.25
-        sticky.strength = max(0.0, strength - strengthDecayRate)
+        //Get penalty percentage for incorrect answer
+        let level = strengthLevel(for: sticky)
+        let strengthPenaltyDecayRate = level.penaltyDecayRate
+        
+        sticky.strength = max(0.0, strength - strengthPenaltyDecayRate)
         sticky.isInMistakePool = true
     }
     
@@ -70,15 +93,20 @@ final class SRSManager {
         stickies.forEach { applyDecay($0) }
     }
     
-    // Applies natural memory decay based on last review date
+    //Applies natural memory decay based on last review date
+    //Strong cards take atleast 7 days+ to drop a level to moderate
+    //Moderate cards take anywhere from 4-7 days to drop to weak depending on how strong
+    //Weak cards drop 10% every day
     private func applyDecay(_ sticky: Sticky) {
         guard let lastReviewedDate = sticky.lastReviewedDate, let strength = sticky.strength else { return }
         
         //Get how many days since the last review of this sticky card (86400 seconds in a day)
         let days = Date().timeIntervalSince(lastReviewedDate) / 86400
-        let decayRate = 0.08 //8% decay per day
         
-        let newStrength = strength - (decayRate * days)
+        let level = strengthLevel(for: sticky) //check current level
+        let dailyDecayRate = level.dailyDecayRate //gets decay rate based on current level
+        
+        let newStrength = strength - (dailyDecayRate * days)
         sticky.strength = max(0.0, newStrength) //set new strength, if its lower than 0 then clamp it at 0
     }
     
