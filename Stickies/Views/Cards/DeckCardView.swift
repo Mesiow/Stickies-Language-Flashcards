@@ -15,8 +15,9 @@ struct DeckCardView: View {
             StickyNoteStyleView()
             
             VStack(alignment: .center, spacing: 6) {
-                //FlagImageView(image: deck.language.image, width: 36, height: 26)
                 Text(deck.name)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.7)
                     .font(.system(size: 18, weight: .medium))
                     .padding(.top, 2)
                 Text(
@@ -24,10 +25,10 @@ struct DeckCardView: View {
                     ? "No stickies yet"
                     : "\(deck.stickies.count) \(deck.stickies.count == 1 ? "sticky" : "stickies")"
                 )
-                .multilineTextAlignment(.center)
                 .font(.system(size: 14, weight: .regular))
                 .opacity(0.6)
             }
+            .multilineTextAlignment(.center)
             .padding(10)
             .frame(maxWidth: .infinity, minHeight: 120, idealHeight: 120)
         }
