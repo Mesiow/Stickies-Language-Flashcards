@@ -23,6 +23,7 @@ struct StrengthPillView: View {
     let title: String
     let isSelected: Bool
     let strengthLevel: StrengthLevel    // 0 = none (for "All"), 1, 2, 3
+    let active: Bool //determines whether this will be active for selecting (if no cards have this strength level it will be inactive)
     let action: () -> Void
     
     // Strength colors
@@ -62,6 +63,9 @@ struct StrengthPillView: View {
                     .stroke(.black.opacity(isSelected ? 0.25 : 0.15), lineWidth: 1)
             )
         }
+        .disabled(!active)
+        .opacity(active ? 1 : 0.60)
+        .animation(.easeInOut(duration: 0.2), value: active)
         .animation(.easeInOut(duration: 0.2), value: isSelected)
         .buttonStyle(.plain)
     }
