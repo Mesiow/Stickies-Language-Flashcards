@@ -27,11 +27,13 @@ struct DecksListView: View {
                 VStack {
                     NavTitleLanguageHeader(name: language.name, image: language.image)
 
-                    Text("\(language.decks.count) \(language.decks.count == 1 ? "Deck" : "Decks")")
-                        .fontWeight(.regular)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(UIColor.lightGray))
-                        .padding(.vertical, 4)
+                    if !decksSnapshot.isEmpty {
+                        Text("\(language.decks.count) \(language.decks.count == 1 ? "Deck" : "Decks")")
+                            .fontWeight(.regular)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.lightGray))
+                            .padding(.vertical, 4)
+                    }
                     
                     LazyVGrid(columns: viewModel.gridColumns, spacing: 10) {
                         ForEach(decksSnapshot, id: \.id) { deck in
