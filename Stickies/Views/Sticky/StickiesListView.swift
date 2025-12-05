@@ -61,18 +61,23 @@ struct StickiesListView: View {
                         showNewStickyView = true
                     }
                     
+                    //Show recent mistakes view & number of cards if not empty
                     if !deck.stickies.isEmpty {
                         RecentMistakesCardView(active: mistakePoolActive) {
                             //show recent mistakes view
                             navigationModel.push(.recentMistakesView(deck))
                         }
+                        
+                        Text("\(deck.stickies.count) \(deck.stickies.count == 1 ? "Sticky Card" : "Sticky Cards")")
+                            .fontWeight(.regular)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color(UIColor.lightGray))
+                            .padding(.top, 4)
+                    }else {
+                        //Empty
+                        CustomContentUnavailableView(label: "No sticky flashcards yet", image: AppInfo.sadCharacter, description: "To get started, tap the + create new sticky button above")
+                        .animation(.easeInOut(duration: 0.3), value: stickiesSnapshot)
                     }
-                    
-                    Text("\(deck.stickies.count) \(deck.stickies.count == 1 ? "Sticky Card" : "Sticky Cards")")
-                        .fontWeight(.regular)
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Color(UIColor.lightGray))
-                        .padding(.top, 4)
                     
                     LazyVGrid(columns: gridColumns, spacing: 10) {
                         ForEach(stickiesSnapshot, id: \.id) { sticky in
@@ -203,7 +208,8 @@ struct StickiesListView: View {
                 StrengthPillView(
                     title: "All",
                     isSelected: selectedFilter == .all,
-                    strengthLevel: .none
+                    strengthLevel: .none,
+                    active: true
                 ) {
                     selectedFilter = .all
                 }
@@ -211,7 +217,8 @@ struct StickiesListView: View {
                 StrengthPillView(
                     title: "Weak",
                     isSelected: selectedFilter == .weak,
-                    strengthLevel: .weak
+                    strengthLevel: .weak,
+                    active: isCardAvailable(for: .weak)
                 ) {
                     selectedFilter = .weak
                 }
@@ -219,7 +226,8 @@ struct StickiesListView: View {
                 StrengthPillView(
                     title: "Medium",
                     isSelected: selectedFilter == .medium,
-                    strengthLevel: .moderate
+                    strengthLevel: .moderate,
+                    active: isCardAvailable(for: .moderate)
                 ) {
                     selectedFilter = .medium
                 }
@@ -227,7 +235,8 @@ struct StickiesListView: View {
                 StrengthPillView(
                     title: "Strong",
                     isSelected: selectedFilter == .strong,
-                    strengthLevel: .strong
+                    strengthLevel: .strong,
+                    active: isCardAvailable(for: .strong)
                 ) {
                     selectedFilter = .strong
                 }
@@ -258,6 +267,13 @@ struct StickiesListView: View {
             stickiesSnapshot = all.filter {
                 SRSManager.shared.strengthLevel(for: $0) == .strong
             }
+        }
+    }
+    
+    //returns true or false if there are any cards with this strength level
+    private func isCardAvailable(for level: StrengthLevel) -> Bool {
+        return deck.stickies.contains { sticky in
+            SRSManager.shared.strengthLevel(for: sticky) == level
         }
     }
 }
