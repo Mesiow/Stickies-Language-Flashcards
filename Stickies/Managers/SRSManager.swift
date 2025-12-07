@@ -102,12 +102,15 @@ final class SRSManager {
         
         //Get how many days since the last review of this sticky card (86400 seconds in a day)
         let days = Date().timeIntervalSince(lastReviewedDate) / 86400
+        print("Days since last review: \(days)")
         
         let level = strengthLevel(for: sticky) //check current level
         let dailyDecayRate = level.dailyDecayRate //gets decay rate based on current level
+        print("decay rate \(dailyDecayRate)")
         
         let newStrength = strength - (dailyDecayRate * days)
         sticky.strength = max(0.0, newStrength) //set new strength, if its lower than 0 then clamp it at 0
+        print("Strength: \(sticky.strength ?? 0.0)")
     }
     
     //MARK: - Filter/Sorting methods

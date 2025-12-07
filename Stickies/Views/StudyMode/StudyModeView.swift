@@ -20,6 +20,9 @@ struct StudyModeView: View {
     
     @Bindable var deck: Deck
     
+    //Shuffled deck for review mode
+    @State private var shuffledDeck: [Sticky] = []
+    
     @State private var isCardFlipped: Bool = false
     @State private var currentCardIndex: Int = 0
     @State private var dragOffset: CGSize = .zero
@@ -29,8 +32,8 @@ struct StudyModeView: View {
     
     //Float for the progress bar
     var progress: CGFloat {
-        guard deck.sortedStickies.count > 0 else { return 0 }
-        return CGFloat(currentCardIndex + 1) / CGFloat(deck.sortedStickies.count)
+        guard shuffledDeck.count > 0 else { return 0 }
+        return CGFloat(currentCardIndex + 1) / CGFloat(shuffledDeck.count)
     }
     
     var body: some View {
@@ -40,7 +43,7 @@ struct StudyModeView: View {
                     .frame(height: 60)
                 
                 VStack(alignment: .center) {
-                    Text("Sticky \(currentCardIndex + 1) \\ \(deck.sortedStickies.count)")
+                    Text("Sticky \(currentCardIndex + 1) \\ \(shuffledDeck.count)")
                         .foregroundStyle(Color(UIColor.lightGray))
                         .font(.system(size: 18, design: .rounded))
                         .fontWeight(.medium)
@@ -64,10 +67,10 @@ struct StudyModeView: View {
                 .padding(.vertical, 4)
                 
                 ZStack{
-                    if !deck.sortedStickies.isEmpty {
+                    if !shuffledDeck.isEmpty {
                         //Next card underneath current card
-                        if currentCardIndex < deck.sortedStickies.count - 1 {
-                            let nextSticky = deck.sortedStickies[currentCardIndex + 1]
+                        if currentCardIndex < shuffledDeck.count - 1 {
+                            let nextSticky = shuffledDeck[currentCardIndex + 1]
                             
                             ZStack {
                                 StickyNoteStyleView()
@@ -93,7 +96,7 @@ struct StudyModeView: View {
                         //Sticky flashcard
                         ZStack {
                             ZStack {
-                                let sticky = deck.sortedStickies[currentCardIndex]
+                                let sticky = shuffledDeck[currentCardIndex]
                                 if isCardFlipped {
                                     StickyBackCardView(sticky: sticky)
                                 } else {
@@ -220,6 +223,8 @@ struct StudyModeView: View {
                         Image(systemName: SFSymbols.xmark)
                             .foregroundStyle(AppInfo.actionButtonTintColor)
                     }
+                    .opacity(viewModel.showResults ? 0.3 : 1.0) //disable button if results are showing
+                    .disabled(viewModel.showResults)
                 }
             }
             .alert("Are you sure you want to end study mode?", isPresented: $viewModel.showEndStudyModeConfirmation) {
@@ -251,6 +256,12 @@ struct StudyModeView: View {
                     }
                 }
             )
+            .task { //Run code before view appears
+                //Shuffle the deck that will be rendered
+                if shuffledDeck.isEmpty {
+                    shuffledDeck = SRSManager.shared.shuffled(deck.stickies)
+                }
+            }
         }
     }
     
@@ -261,7 +272,7 @@ struct StudyModeView: View {
     
     //Update view model based on direction swiped
     private func update(_ direction: SwipeDirection){
-        let currentSticky = deck.sortedStickies[currentCardIndex]
+        let currentSticky = shuffledDeck[currentCardIndex]
         //Stats logic
         if direction == .right {
             SRSManager.shared.markCorrect(currentSticky)
@@ -296,7 +307,7 @@ struct StudyModeView: View {
         // After the animation, reveal the next card
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             //Reset for next card
-            if currentCardIndex < deck.sortedStickies.count - 1 {
+            if currentCardIndex < shuffledDeck.count - 1 {
                 currentCardIndex += 1
                 
                 dragOffset = .zero

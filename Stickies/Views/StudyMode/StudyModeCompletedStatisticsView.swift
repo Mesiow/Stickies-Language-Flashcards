@@ -17,6 +17,15 @@ struct StudyModeCompletedStatisticsView: View {
         guard total > 0 else { return 0 }
         return Int((Double(correct) / Double(total)) * 100)
     }
+    
+    var mascotImage: String {
+        switch percentageCorrect {
+        case 90...100: return AppInfo.stokedCharacter
+        case 70...89: return AppInfo.happyCharacter
+        case 0...69: return AppInfo.cringeCharacter
+        default: return AppInfo.sadCharacter
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -29,6 +38,8 @@ struct StudyModeCompletedStatisticsView: View {
             
             // Popup card
             VStack(spacing: 15) {
+                StickyMascotView(width: 120, height: 120, image: mascotImage, message: nil)
+                
                 Text("Results")
                     .font(.title)
                     .fontWeight(.semibold)
@@ -44,7 +55,7 @@ struct StudyModeCompletedStatisticsView: View {
                             .fontWeight(.medium)
                         Text("\(correct)")
                             .fontWeight(.semibold)
-                            .foregroundColor(.green)
+                            .foregroundStyle(.green)
                     }
                     
                     HStack {
@@ -52,29 +63,12 @@ struct StudyModeCompletedStatisticsView: View {
                             .fontWeight(.medium)
                         Text("\(incorrect)")
                             .fontWeight(.semibold)
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                     }
                 }
-                .font(.system(size: 18))
+                .font(.system(size: 20))
                 .padding(.horizontal, 4)
                 .padding(.vertical, 4)
-                
-                if incorrect > 0 {
-                    Button {
-                        //Review mistakes
-                    }label: {
-                        Text("Review Mistakes")
-                            .foregroundStyle(.white.opacity(0.85))
-                            .fontWeight(.medium)
-                            .font(.system(size: 18, weight: .semibold))
-                            .padding(.vertical, 8)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 44)
-                    .padding(.horizontal)
-                    .buttonStyle(DepthButtonStyle(
-                        foregroundColor: AppInfo.secondaryButtonBackgroundTintColor,
-                        backgroundColor: AppInfo.secondaryButtonTintColor))
-                }
                 
                 Button {
                     onClose()
@@ -95,8 +89,13 @@ struct StudyModeCompletedStatisticsView: View {
             .background(AppInfo.stickyNoteTintColor.opacity(0.70).ignoresSafeArea())
             .cornerRadius(20)
             .padding()
-            .offset(y: -80)
+            .offset(y: -70)
             .transition(.scale.combined(with: .opacity))
+        }
+        .overlay {
+            if percentageCorrect == 100 {
+                ConfettiView()
+            }
         }
         .onAppear {
             //User finished practicing, fire haptic

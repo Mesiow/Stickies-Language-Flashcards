@@ -36,11 +36,12 @@ struct StickyBackCardView: View {
                         .foregroundStyle(.gray)
                         .opacity(0.8)
                         .multilineTextAlignment(.center)
-                        .padding(.top, 4)
+                        .padding(.vertical, 4)
                         .padding(.horizontal, 4)
                 }
             }
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
         }
         .frame(maxWidth: .infinity, minHeight: 350, maxHeight: 350)
         .padding(.horizontal, 25)

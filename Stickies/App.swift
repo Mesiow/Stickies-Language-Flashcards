@@ -28,6 +28,9 @@ enum AppInfo {
     //Character image names
     static let sadCharacter = "character-sad"
     static let excitedCharacter = "character-excited"
+    static let happyCharacter = "character-happy"
+    static let stokedCharacter = "character-stoked"
+    static let cringeCharacter = "character-cringe"
 }
 
 enum SFSymbols {
