@@ -24,6 +24,7 @@ struct NewStickyCardView: View {
     
     @Bindable var deck: Deck
     var existingSticky: Sticky?
+    
     @FocusState private var isWordFocused: Bool
     
     var body: some View {
@@ -93,6 +94,11 @@ struct NewStickyCardView: View {
                     .frame(maxWidth: .infinity, minHeight: 420, maxHeight: 460)
                     .padding(.horizontal, 6)
                     
+                    //Render mastered button option only if this is an existing sticky already
+                    if existingSticky != nil {
+                        masteredButton
+                    }
+                    
                     Spacer()
                 }
             }
@@ -110,7 +116,7 @@ struct NewStickyCardView: View {
                     
                     //Editing
                     if let existing = existingSticky {
-                        homeViewModel.updateSticky(existing, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, exampleSentence: viewModel.exampleSentence)
+                        homeViewModel.updateSticky(existing, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, exampleSentence: viewModel.exampleSentence, isMastered: viewModel.isMastered)
                     } else {
                         //Add new sticky note card for the language
                         let newSticky = Sticky(deck: deck, foreignWord: viewModel.foreignWord, translation: viewModel.translation, pronunciation: viewModel.pronunciation, examplePhrase: viewModel.exampleSentence)
@@ -161,5 +167,40 @@ struct NewStickyCardView: View {
                 }
             }
         }
+    }
+    
+    var masteredButton: some View {
+        Button {
+            let haptic = UIImpactFeedbackGenerator(style: .medium)
+            haptic.prepare()
+            haptic.impactOccurred()
+            
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                viewModel.isMastered.toggle()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: viewModel.isMastered ? SFSymbols.checkmarkSealFill : SFSymbols.checkmarkSeal)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(viewModel.isMastered ? .white : .black.opacity(0.8))
+                
+                Text(viewModel.isMastered ? "Mastered" : "Mark as Mastered")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(viewModel.isMastered ? .white : .black.opacity(0.8))
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 18)
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(viewModel.isMastered ? Color.green : AppInfo.stickyNoteTintColor)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Color.black.opacity(0.15), lineWidth: 1)
+            )
+            .padding()
+        }
+        .buttonStyle(.plain)
     }
 }
