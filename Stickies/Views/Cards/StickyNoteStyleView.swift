@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct StickyNoteStyleView: View {
-    
-    var color: Binding<Color>? = nil
     let offset: CGFloat = 4
     
     var body: some View {
