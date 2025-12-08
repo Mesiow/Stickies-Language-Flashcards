@@ -31,13 +31,24 @@ struct StickyNoteCardView: View {
                 Text(sticky.foreignWord)
                     .font(.system(size: 26, weight: .semibold))
                     .foregroundStyle(.black)
+                    .minimumScaleFactor(0.8)
+                    .padding(.trailing, 12)
+                
                 Spacer()
             }
             .padding()
+            .padding(.trailing, 12)
         }
         //Strength indicator
         .overlay(alignment: .bottomTrailing) {
             HStack(spacing: 2) {
+                if let mastered = sticky.isMastered {
+                    if mastered {
+                        Image(systemName: SFSymbols.checkmarkSealFill)
+                            .foregroundStyle(.green)
+                            .font(.system(size: 12))
+                    }
+                }
                 ForEach(0..<strengthLevel.rawValue, id: \.self) { strength in
                     StrengthIndicatorView(strength: strengthLevel, width: 8, height: 4)
                 }
