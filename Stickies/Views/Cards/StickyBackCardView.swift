@@ -19,6 +19,8 @@ struct StickyBackCardView: View {
                     .font(.system(size: 29, weight: .semibold))
                     .foregroundStyle(.black)
                     .multilineTextAlignment(.center)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.7)
                     .padding(.horizontal)
                 
                 if let pronunciation = sticky.pronunciation {
@@ -27,6 +29,7 @@ struct StickyBackCardView: View {
                         .foregroundStyle(.black)
                         .opacity(0.7)
                         .multilineTextAlignment(.center)
+                        .minimumScaleFactor(0.8)
                         .padding(.top, 4)
                         .padding(.horizontal, 4)
                 }
