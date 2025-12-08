@@ -31,7 +31,7 @@ struct ConfettiView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 2))
                     .rotationEffect(.degrees(animate ? confetti.spin : 0))
                     .offset(x: confetti.x, y: animate ? 500: -300)
-                    .opacity(animate ? 1 : 0)
+                    .opacity(animate ? 0.8 : 0)
                     .animation(
                         .easeOut(duration: 3.0).delay(confetti.delay),
                         value: animate
