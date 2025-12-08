@@ -67,4 +67,6 @@ enum SFSymbols {
     static let eyeSlash = "eye.slash"
     static let chevronLeftTwo = "chevron.left.2"
     static let chevronRightTwo = "chevron.right.2"
+    static let checkmarkSealFill = "checkmark.seal.fill"
+    static let checkmarkSeal = "checkmark.seal"
 }
