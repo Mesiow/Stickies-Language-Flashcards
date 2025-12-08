@@ -49,8 +49,8 @@ final class SRSManager {
     func strengthLevel(for sticky: Sticky) -> StrengthLevel {
         if let strength = sticky.strength {
             switch strength {
-            case 0.0..<0.33: return .weak
-            case 0.33..<0.66: return .moderate
+            case 0.0..<0.30: return .weak
+            case 0.30..<0.66: return .moderate
             default: return .strong //0.66 - 1.0
             }
         }
@@ -86,6 +86,28 @@ final class SRSManager {
         sticky.isInMistakePool = true
     }
     
+    func markMastered(_ sticky: Sticky) {
+        sticky.previousStrength = sticky.strength //store old strength
+        sticky.strength = 1.0 //mastered = max strength
+        sticky.isMastered = true
+        sticky.isInMistakePool = false
+        
+        print("mark mastered")
+    }
+    
+    func unmarkMastered(_ sticky: Sticky) {
+        sticky.isMastered = false
+        
+        if let prev = sticky.previousStrength {
+            sticky.strength = prev
+        }else {
+            sticky.strength = 0.5 //fallback
+        }
+        print("mark unmastered")
+        print("prev strength \(sticky.strength ?? 0)")
+        sticky.previousStrength = nil
+    }
+    
     //MARK: - Decay methods
     
     //Apply strength decay to all stickies in a deck
@@ -98,6 +120,16 @@ final class SRSManager {
     //Moderate cards take anywhere from 4-7 days to drop to weak depending on how strong
     //Weak cards drop 10% every day
     private func applyDecay(_ sticky: Sticky) {
+        let notAvailable = sticky.isMastered == nil
+        if !notAvailable {
+            if let mastered = sticky.isMastered {
+                guard !mastered else {
+                    print("mastered card, do not apply decay")
+                    return //Skip decay if sticky is mastered
+                }
+            }
+        }
+       
         guard let lastReviewedDate = sticky.lastReviewedDate, let strength = sticky.strength else { return }
         
         //Get how many days since the last review of this sticky card (86400 seconds in a day)
