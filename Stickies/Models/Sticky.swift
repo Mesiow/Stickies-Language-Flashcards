@@ -23,6 +23,7 @@ final class Sticky: Identifiable, Hashable {
     var translation: String //on the back of the sticky
     var pronunciation: String? //how to pronounce the word correctly
     var examplePhrase: String?
+    var isMastered: Bool?
     
     var createdAt: Date
    
@@ -30,6 +31,8 @@ final class Sticky: Identifiable, Hashable {
     //Each word has a “strength bar” that gradually weakens unless practiced.
     var strength: Double? //value of 0.0 to 1.0 telling us how well we know the word,
                          //0 = new word don't know well at all, 1 = fully mastered
+    var previousStrength: Double? //stores old strength for when the user marks mastered and unmarks it as mastered, we need to set it back to the previous strength
+    
     var lastReviewedDate: Date? //the last time the card was reviewed, used for calculating how much strength should decay
     var timesCorrect: Int? //how many times the user answered the card correctly
     var timesIncorrect: Int? //how many times the user answered the card incorrectly
@@ -43,11 +46,13 @@ final class Sticky: Identifiable, Hashable {
         self.translation = translation
         self.pronunciation = pronunciation
         self.examplePhrase = examplePhrase
+        self.isMastered = false
         
         self.createdAt = Date()
         
         //SRS vars
         self.strength = 0.0 //every word starts at 0
+        self.previousStrength = 0.0
         self.lastReviewedDate = Date()
         self.timesCorrect = 0
         self.timesIncorrect = 0
