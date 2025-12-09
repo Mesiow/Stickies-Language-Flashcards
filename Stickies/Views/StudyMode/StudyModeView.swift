@@ -21,6 +21,7 @@ struct StudyModeView: View {
     @Bindable var deck: Deck
     
     //Shuffled deck for review mode
+    @State var selectedStrengthFilter: StrengthFilter //review cards based on filter passed in
     @State private var shuffledDeck: [Sticky] = []
     
     @State private var isCardFlipped: Bool = false
@@ -259,7 +260,8 @@ struct StudyModeView: View {
             .task { //Run code before view appears
                 //Shuffle the deck that will be rendered
                 if shuffledDeck.isEmpty {
-                    shuffledDeck = SRSManager.shared.shuffled(deck.stickies)
+                    //Build Session
+                    shuffledDeck = SRSManager.shared.buildStudySession(from: deck.stickies, filter: selectedStrengthFilter)
                 }
             }
         }
