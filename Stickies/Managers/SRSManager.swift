@@ -57,6 +57,34 @@ final class SRSManager {
         return .none
     }
     
+    //MARK: - Build session
+    func buildStudySession(from stickies: [Sticky], filter: StrengthFilter) -> [Sticky] {
+        //Apply filter
+        var session = applyFilter(stickies, filter)
+        
+        //Always remove mastered cards
+        session.removeAll { ($0.isMastered ?? false) == true }
+        
+        //Return new shuffled session
+        return session.shuffled()
+    }
+    
+    private func applyFilter(_ stickies: [Sticky], _ filter: StrengthFilter) -> [Sticky] {
+        switch filter {
+        case .all:
+            return stickies
+            
+        case .weak:
+            return self.filter(stickies, by: .weak)
+            
+        case .medium:
+            return self.filter(stickies, by: .moderate)
+            
+        case .strong:
+            return self.filter(stickies, by: .strong)
+        }
+    }
+    
     //MARK: - Main logic methods
     func markCorrect(_ sticky: Sticky) {
         sticky.timesCorrect? += 1
