@@ -68,11 +68,12 @@ struct StickiesListView: View {
                             navigationModel.push(.recentMistakesView(deck))
                         }
                         
-                        Text("\(deck.stickies.count) \(deck.stickies.count == 1 ? "Sticky Card" : "Sticky Cards")")
+                        Text("\(stickiesSnapshot.count) \(stickiesSnapshot.count == 1 ? "Sticky Card" : "Sticky Cards")")
                             .fontWeight(.regular)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(Color(UIColor.lightGray))
                             .padding(.top, 4)
+                            .transition(.opacity)
                     }else {
                         //Empty
                         CustomContentUnavailableView(label: "No sticky flashcards yet", image: AppInfo.sadCharacter, description: "To get started, tap the + create new sticky button above")
@@ -187,7 +188,7 @@ struct StickiesListView: View {
             NewStickyCardView(deck: deck, existingSticky: sticky)
         }
         .fullScreenCover(isPresented: $showStudyModeView) {
-            StudyModeView(deck: deck)
+            StudyModeView(deck: deck, selectedStrengthFilter: selectedFilter)
         }
         .onChange(of: selectedFilter) {
             withAnimation(.easeInOut(duration: 0.25)) {
@@ -254,19 +255,13 @@ struct StickiesListView: View {
             stickiesSnapshot = all
 
         case .weak:
-            stickiesSnapshot = all.filter {
-                SRSManager.shared.strengthLevel(for: $0) == .weak
-            }
-
+            stickiesSnapshot = SRSManager.shared.filter(all, by: .weak)
+           
         case .medium:
-            stickiesSnapshot = all.filter {
-                SRSManager.shared.strengthLevel(for: $0) == .moderate
-            }
-
+            stickiesSnapshot = SRSManager.shared.filter(all, by: .moderate)
+        
         case .strong:
-            stickiesSnapshot = all.filter {
-                SRSManager.shared.strengthLevel(for: $0) == .strong
-            }
+            stickiesSnapshot = SRSManager.shared.filter(all, by: .strong)
         }
     }
     
