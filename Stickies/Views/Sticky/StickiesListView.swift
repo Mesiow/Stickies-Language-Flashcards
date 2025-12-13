@@ -34,10 +34,6 @@ struct StickiesListView: View {
         GridItem(.flexible())
     ]
     
-    /*private var sortedStickiesSnapshot: [Sticky] {
-        deck.stickies.sorted { $0.createdAt < $1.createdAt }
-    }*/
-    
     private var mistakePoolActive: Bool {
         return deck.unwrappedStickies.contains { sticky in
             sticky.isInMistakePool == true

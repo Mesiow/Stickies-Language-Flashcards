@@ -70,4 +70,5 @@ enum SFSymbols {
     static let checkmarkSealFill = "checkmark.seal.fill"
     static let checkmarkSeal = "checkmark.seal"
     static let brain = "brain.head.profile"
+    static let calendar = "calendar"
 }

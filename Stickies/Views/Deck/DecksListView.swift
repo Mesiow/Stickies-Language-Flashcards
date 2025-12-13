@@ -17,6 +17,7 @@ struct DecksListView: View {
     @State private var decksSnapshot: [Deck] = []
     
     @State private var showNewDeckView = false
+    @State private var showCalendarStreakView = false
     @State private var isEditing = false
     @State private var deckToDelete: Deck? = nil
     @State private var showDeckDeleteConfirmation = false
@@ -111,6 +112,12 @@ struct DecksListView: View {
                         isEditing.toggle()
                     }
                 }
+                
+                Button {
+                    showCalendarStreakView = true
+                }label: {
+                    Image(systemName: SFSymbols.calendar)
+                }
             }
         }
         .background(
@@ -118,6 +125,10 @@ struct DecksListView: View {
         )
         .fullScreenCover(isPresented: $showNewDeckView) {
             NewDeckView(language: language)
+        }
+        .sheet(isPresented: $showCalendarStreakView) {
+            CalendarStreakView(studyDates: [Date.now, Date.now.addingTimeInterval(-36500)])
+                .presentationDetents([.large, .medium])
         }
         .alert(deckToDelete != nil ? "Are you sure you want to delete \(deckToDelete?.name ?? "Name")?" : "Are you sure you want to delete this deck?", isPresented: $showDeckDeleteConfirmation) {
             Button("Delete", role: .destructive) {
