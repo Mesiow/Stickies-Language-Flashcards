@@ -34,18 +34,18 @@ struct StickiesListView: View {
         GridItem(.flexible())
     ]
     
-    private var sortedStickiesSnapshot: [Sticky] {
+    /*private var sortedStickiesSnapshot: [Sticky] {
         deck.stickies.sorted { $0.createdAt < $1.createdAt }
-    }
+    }*/
     
     private var mistakePoolActive: Bool {
-        return deck.stickies.contains { sticky in
+        return deck.unwrappedStickies.contains { sticky in
             sticky.isInMistakePool == true
         }
     }
     
     private var stickiesInMistakePool: [Sticky] {
-        sortedStickiesSnapshot.filter { $0.isInMistakePool == true }
+        deck.sortedStickies.filter { $0.isInMistakePool == true }
     }
     
   
@@ -62,7 +62,7 @@ struct StickiesListView: View {
                     }
                     
                     //Show recent mistakes view & number of cards if not empty
-                    if !deck.stickies.isEmpty {
+                    if !deck.unwrappedStickies.isEmpty {
                         RecentMistakesCardView(active: mistakePoolActive) {
                             //show recent mistakes view
                             navigationModel.push(.recentMistakesView(deck))
@@ -114,12 +114,12 @@ struct StickiesListView: View {
                     .padding(.horizontal, 4)
                     .animation(.easeInOut(duration: 0.25), value: stickiesSnapshot.count)
                     .onAppear {
-                        stickiesSnapshot = sortedStickiesSnapshot
+                        stickiesSnapshot = deck.sortedStickies
                         applyStrengthFilter()
                     }
-                    .onChange(of: deck.stickies) { //snapshot needed for proper animation
+                    .onChange(of: deck.unwrappedStickies) { //snapshot needed for proper animation
                         withAnimation(.easeInOut(duration: 0.25)) {
-                            stickiesSnapshot = sortedStickiesSnapshot
+                            stickiesSnapshot = deck.sortedStickies
                             applyStrengthFilter()
                         }
                     }
@@ -129,12 +129,12 @@ struct StickiesListView: View {
             .scrollIndicators(.hidden)
         }
         .navigationBarTitleDisplayMode(.large)
-        .navigationTitle(deck.name)
+        .navigationTitle(deck.name ?? "Deck")
         .safeAreaInset(edge: .bottom) {
             VStack {
                 Button {
                     //Only if stickies exist then we can practice
-                    guard deck.stickies.count > 0 else {
+                    guard deck.unwrappedStickies.count > 0 else {
                         showNoStickiesExistAlert = true
                         return
                     }
@@ -149,7 +149,6 @@ struct StickiesListView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: 54)  // makes it stretch to the container width
                 .padding(.horizontal)
-                .padding(.bottom)
                 .buttonStyle(DepthButtonStyle(
                     foregroundColor: AppInfo.actionButtonTintColor,
                     backgroundColor: AppInfo.mainTintColor))
@@ -198,7 +197,7 @@ struct StickiesListView: View {
         .onAppear {
             print("stickies list appeared")
             //Update strength of sticky flashcards based on last reviewed date
-            SRSManager.shared.applyDecay(to: deck.stickies)
+            SRSManager.shared.applyDecay(to: deck.unwrappedStickies)
         }
     }
     
@@ -248,7 +247,7 @@ struct StickiesListView: View {
     }
     
     private func applyStrengthFilter() {
-        let all = sortedStickiesSnapshot
+        let all = deck.sortedStickies
 
         switch selectedFilter {
         case .all:
@@ -267,7 +266,7 @@ struct StickiesListView: View {
     
     //returns true or false if there are any cards with this strength level
     private func isCardAvailable(for level: StrengthLevel) -> Bool {
-        return deck.stickies.contains { sticky in
+        return deck.unwrappedStickies.contains { sticky in
             SRSManager.shared.strengthLevel(for: sticky) == level
         }
     }

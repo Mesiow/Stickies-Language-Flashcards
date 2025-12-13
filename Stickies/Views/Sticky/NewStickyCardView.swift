@@ -79,12 +79,16 @@ struct NewStickyCardView: View {
                                 .scrollContentBackground(.hidden)
                                 .background(Color.clear)
                                 .overlay(
-                                    Text(((viewModel.exampleSentence?.isEmpty) == nil) ? "Example sentence (optional)" : "")
-                                        .foregroundColor(.black.opacity(0.3))
-                                        .font(.system(size: 18))
-                                        .padding(.horizontal, 8)
-                                        .padding(.top, 8),
-                                    alignment: .topLeading
+                                    Group {
+                                          if (viewModel.exampleSentence ?? "").isEmpty {
+                                              Text("Example sentence (optional)")
+                                                  .foregroundColor(.black.opacity(0.3))
+                                                  .font(.system(size: 18))
+                                                  .padding(.horizontal, 8)
+                                                  .padding(.top, 8)
+                                          }
+                                      },
+                                      alignment: .topLeading
                                 )
                         }
                         .padding(.vertical, 24)

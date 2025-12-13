@@ -18,10 +18,10 @@ struct StickyNoteCardMistakeView: View {
             
             VStack(alignment: .leading) {
                 Spacer()
-                Text(sticky.foreignWord)
+                Text(sticky.foreignWord ?? "Word")
                     .font(.system(size: 21, weight: .semibold))
                     .foregroundStyle(.black)
-                Text(sticky.translation)
+                Text(sticky.translation ?? "Translation")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.black.opacity(0.85))
                 Spacer()

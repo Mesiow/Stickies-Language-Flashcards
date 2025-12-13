@@ -11,21 +11,18 @@ import SwiftData
 //Sticky Note Card that the user uses to study vocab with
 @Model
 final class Sticky: Identifiable, Hashable {
-    @Attribute(.unique) var id: UUID
-    
-    //each sticky is part of one language
-    //@Relationship var language: Language
+    var id: UUID?
     
     //Each sticky is part of a deck
-    @Relationship var deck: Deck
+    @Relationship var deck: Deck?
     
-    var foreignWord: String //word or phrase to learn
-    var translation: String //on the back of the sticky
+    var foreignWord: String? //word or phrase to learn
+    var translation: String? //on the back of the sticky
     var pronunciation: String? //how to pronounce the word correctly
     var examplePhrase: String?
     var isMastered: Bool?
     
-    var createdAt: Date
+    var createdAt: Date?
    
     //Fields for Strength Decay Based SRS (Spaced Repetition System)
     //Each word has a “strength bar” that gradually weakens unless practiced.
@@ -33,6 +30,7 @@ final class Sticky: Identifiable, Hashable {
                          //0 = new word don't know well at all, 1 = fully mastered
     var previousStrength: Double? //stores old strength for when the user marks mastered and unmarks it as mastered, we need to set it back to the previous strength
     
+    var lastDecayAppliedDate: Date? //This timestamp tracks when decay was last applied
     var lastReviewedDate: Date? //the last time the card was reviewed, used for calculating how much strength should decay
     var timesCorrect: Int? //how many times the user answered the card correctly
     var timesIncorrect: Int? //how many times the user answered the card incorrectly
@@ -53,6 +51,7 @@ final class Sticky: Identifiable, Hashable {
         //SRS vars
         self.strength = 0.0 //every word starts at 0
         self.previousStrength = 0.0
+        self.lastDecayAppliedDate = nil
         self.lastReviewedDate = Date()
         self.timesCorrect = 0
         self.timesIncorrect = 0

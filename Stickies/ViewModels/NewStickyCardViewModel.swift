@@ -19,10 +19,10 @@ final class NewStickyCardViewModel: ObservableObject {
     @Published var showInputAlert = false
     
     func loadExisting(existingSticky: Sticky) {
-        foreignWord = existingSticky.foreignWord
-        translation = existingSticky.translation
-        pronunciation = existingSticky.pronunciation
-        exampleSentence = existingSticky.examplePhrase
+        foreignWord = existingSticky.foreignWord ?? ""
+        translation = existingSticky.translation ?? ""
+        pronunciation = existingSticky.pronunciation ?? ""
+        exampleSentence = existingSticky.examplePhrase ?? ""
         isMastered = existingSticky.isMastered ?? false
     }
 }

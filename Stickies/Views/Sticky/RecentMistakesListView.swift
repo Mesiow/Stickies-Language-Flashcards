@@ -12,7 +12,7 @@ struct RecentMistakesListView: View {
     @Bindable var deck: Deck
     
     private var stickiesInMistakePool: [Sticky] {
-        deck.stickies.filter { $0.isInMistakePool == true }
+        deck.unwrappedStickies.filter { $0.isInMistakePool == true }
     }
     
     var body: some View {

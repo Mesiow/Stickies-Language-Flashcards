@@ -42,12 +42,12 @@ final class HomeViewModel: ObservableObject {
     
     //Deck Methods
     func addNewDeck(for language: Language, deck: Deck){
-        language.decks.append(deck)
+        language.decks?.append(deck)
         try? modelContext.save()
     }
     
     func deleteDeck(for language: Language, deck: Deck) {
-        language.decks.removeAll { d in
+        language.decks?.removeAll { d in
             d.id == deck.id
         }
         try? modelContext.save()
@@ -55,7 +55,7 @@ final class HomeViewModel: ObservableObject {
     
     //Sticky Note Methods
     func addNewSticky(for deck: Deck, sticky: Sticky) {
-        deck.stickies.append(sticky)
+        deck.stickies?.append(sticky)
         try? modelContext.save()
     }
     
@@ -76,7 +76,7 @@ final class HomeViewModel: ObservableObject {
     }
     
     func deleteSticky(for deck: Deck, sticky: Sticky) {
-        deck.stickies.removeAll { s in
+        deck.stickies?.removeAll { s in
             s.id == sticky.id
         }
         try? modelContext.save()

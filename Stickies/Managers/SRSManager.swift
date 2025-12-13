@@ -148,6 +148,7 @@ final class SRSManager {
     //Moderate cards take anywhere from 4-7 days to drop to weak depending on how strong
     //Weak cards drop 10% every day
     private func applyDecay(_ sticky: Sticky) {
+        //Do not apply decay if card is marked as mastered
         let notAvailable = sticky.isMastered == nil
         if !notAvailable {
             if let mastered = sticky.isMastered {
@@ -158,10 +159,22 @@ final class SRSManager {
             }
         }
        
-        guard let lastReviewedDate = sticky.lastReviewedDate, let strength = sticky.strength else { return }
+        guard let lastReviewedDate = sticky.lastReviewedDate,
+              let strength = sticky.strength else { return }
+        
+        let now = Date()
+        
+        //If decay was applied recently, skip this
+        if let lastDecay = sticky.lastDecayAppliedDate {
+            let hoursSinceLastDecay = now.timeIntervalSince(lastDecay) / 3600
+            if hoursSinceLastDecay < 24 {
+                return //if less than 24 hours has passed since last decay, prevent repeated decay within the day
+            }
+        }
         
         //Get how many days since the last review of this sticky card (86400 seconds in a day)
-        let days = Date().timeIntervalSince(lastReviewedDate) / 86400
+        let days = now.timeIntervalSince(lastReviewedDate) / 86400
+        guard days >= 1 else { return } //Don't decay card within the same day, should be once per day when the stickies list is viewed for a deck
         print("Days since last review: \(days)")
         
         let level = strengthLevel(for: sticky) //check current level
@@ -171,6 +184,9 @@ final class SRSManager {
         let newStrength = strength - (dailyDecayRate * days)
         sticky.strength = max(0.0, newStrength) //set new strength, if its lower than 0 then clamp it at 0
         print("Strength: \(sticky.strength ?? 0.0)")
+        
+        //Mark when last decay was applied
+        sticky.lastDecayAppliedDate = now
     }
     
     //MARK: - Filter/Sorting methods

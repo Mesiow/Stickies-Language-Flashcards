@@ -14,18 +14,17 @@ struct LanguageCardView: View {
     var body: some View {
         ZStack {
             StickyNoteStyleView()
-            //StickyNoteStyleFlapView()
             
             VStack(alignment: .center, spacing: 6) {
-                FlagImageView(image: language.image, width: 46, height: 36)
+                FlagImageView(image: language.image ?? popularLanguages[0].image, width: 46, height: 36)
                 
-                Text(language.name)
+                Text(language.name ?? "Language")
                     .fontWeight(.medium)
                     .padding(.top, 2)
                 Text(
-                    language.decks.isEmpty
+                    language.unwrappedDecks.isEmpty
                     ? "No decks yet"
-                    : "\(language.decks.count) \(language.decks.count == 1 ? "deck" : "decks")"
+                    : "\(language.unwrappedDecks.count) \(language.unwrappedDecks.count == 1 ? "deck" : "decks")"
                 )
                 .multilineTextAlignment(.center)
                 .fontWeight(.regular)

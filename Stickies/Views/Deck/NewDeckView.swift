@@ -117,7 +117,7 @@ struct NewDeckView: View {
         }
         
         //Check if deck name already exists
-        let nameExists = language.decks.filter { $0.name == name }.count > 0
+        let nameExists = language.unwrappedDecks.filter { $0.name == name }.count > 0
         guard !nameExists else {
             showNameAlreadyExistsAlert = true
             return

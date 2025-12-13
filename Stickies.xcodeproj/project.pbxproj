@@ -15,9 +15,22 @@
 		C05699BB2EB16257008289FE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C028327C2EEB494D00F869F9 /* Exceptions for "Stickies" folder in "Stickies" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C056994B2EB15F2C008289FE /* Stickies */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C056994E2EB15F2C008289FE /* Stickies */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C028327C2EEB494D00F869F9 /* Exceptions for "Stickies" folder in "Stickies" target */,
+			);
 			path = Stickies;
 			sourceTree = "<group>";
 		};
@@ -272,6 +285,7 @@
 				DEVELOPMENT_TEAM = 822D8Y7G66;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Stickies/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stickies;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -312,6 +326,7 @@
 				DEVELOPMENT_TEAM = 822D8Y7G66;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Stickies/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stickies;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

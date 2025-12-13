@@ -13,10 +13,9 @@ struct StickyFrontCardView: View {
     var body: some View {
         ZStack {
             StickyNoteStyleView()
-                //.padding(.horizontal, 25)
             
             VStack {
-                Text(sticky.foreignWord)
+                Text(sticky.foreignWord ?? "Word")
                     .font(.system(size: 32, weight: .semibold))
                     .foregroundStyle(.black)
                     .multilineTextAlignment(.center)

@@ -22,6 +22,11 @@ struct StickiesApp: App {
     
     @StateObject private var homeViewModel: HomeViewModel
     @StateObject private var navigationModel = NavigationModel()
+    @StateObject private var purchaseManager = PurchaseManager()
+    
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var showOnboarding = false
+    @State private var showPaywall = false
     
     init(){
         let schema = Schema([
@@ -65,7 +70,16 @@ struct StickiesApp: App {
                 .preferredColorScheme(.light) //app is designed for light mode only (looks better)
                 .environmentObject(homeViewModel)
                 .environmentObject(navigationModel)
+                .environmentObject(purchaseManager)
                 .environment(\.font, .system(.body, design: .rounded))
+                .fullScreenCover(isPresented: $showPaywall) {
+                    PurchaseView(isPresented: $showPaywall)
+                        .background(AppInfo.backgroundColor)
+                        .environmentObject(purchaseManager)
+                }
+                .task {
+                    await purchaseManager.updatePurchasedProducts()
+                }
         }
         .modelContainer(container)
     }

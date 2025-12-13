@@ -69,4 +69,5 @@ enum SFSymbols {
     static let chevronRightTwo = "chevron.right.2"
     static let checkmarkSealFill = "checkmark.seal.fill"
     static let checkmarkSeal = "checkmark.seal"
+    static let brain = "brain.head.profile"
 }

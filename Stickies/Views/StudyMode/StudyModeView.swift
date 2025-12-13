@@ -76,7 +76,7 @@ struct StudyModeView: View {
                             ZStack {
                                 StickyNoteStyleView()
                                 VStack {
-                                    Text(nextSticky.foreignWord)
+                                    Text(nextSticky.foreignWord ?? "Word")
                                         .font(.system(size: 32, weight: .semibold))
                                         .foregroundStyle(.black)
                                         .padding(.horizontal)
@@ -247,7 +247,7 @@ struct StudyModeView: View {
                             incorrect: viewModel.incorrectCount,
                             onClose: {
                                 //Apply decay after completing review
-                                SRSManager.shared.applyDecay(to: deck.stickies)
+                                SRSManager.shared.applyDecay(to: deck.unwrappedStickies)
                                 withAnimation(.spring()) {
                                     viewModel.showResults = false
                                     dismiss()
@@ -261,7 +261,7 @@ struct StudyModeView: View {
                 //Shuffle the deck that will be rendered
                 if shuffledDeck.isEmpty {
                     //Build Session
-                    shuffledDeck = SRSManager.shared.buildStudySession(from: deck.stickies, filter: selectedStrengthFilter)
+                    shuffledDeck = SRSManager.shared.buildStudySession(from: deck.unwrappedStickies, filter: selectedStrengthFilter)
                 }
             }
         }

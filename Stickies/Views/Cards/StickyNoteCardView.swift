@@ -21,14 +21,14 @@ struct StickyNoteCardView: View {
             
             HStack {
                 Spacer()
-                FlagImageView(image: sticky.deck.language.image, width: 24, height: 24)
+                FlagImageView(image: sticky.deck?.language?.image ?? popularLanguages[0].image, width: 24, height: 24)
             }
             .padding(.top, 8)
             .padding(.horizontal, 8)
             
             VStack(alignment: .center) {
                 Spacer()
-                Text(sticky.foreignWord)
+                Text(sticky.foreignWord ?? "Word")
                     .font(.system(size: 26, weight: .semibold))
                     .foregroundStyle(.black)
                     .minimumScaleFactor(0.8)

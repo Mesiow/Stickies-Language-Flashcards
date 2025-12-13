@@ -15,7 +15,7 @@ struct StickyBackCardView: View {
             StickyNoteStyleView()
             
             VStack {
-                Text(sticky.translation)   // translation
+                Text(sticky.translation ?? "Translation")   // translation
                     .font(.system(size: 29, weight: .semibold))
                     .foregroundStyle(.black)
                     .multilineTextAlignment(.center)
@@ -23,7 +23,7 @@ struct StickyBackCardView: View {
                     .minimumScaleFactor(0.7)
                     .padding(.horizontal)
                 
-                if let pronunciation = sticky.pronunciation {
+                if let pronunciation = sticky.pronunciation, !pronunciation.isEmpty {
                     Text(pronunciation)
                         .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(.black)
@@ -33,7 +33,7 @@ struct StickyBackCardView: View {
                         .padding(.top, 4)
                         .padding(.horizontal, 4)
                 }
-                if let examplePhrase = sticky.examplePhrase {
+                if let examplePhrase = sticky.examplePhrase, !examplePhrase.isEmpty {
                     Text(examplePhrase)
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.gray)

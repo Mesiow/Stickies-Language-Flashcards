@@ -25,10 +25,10 @@ struct DecksListView: View {
         ZStack {
             ScrollView {
                 VStack {
-                    NavTitleLanguageHeader(name: language.name, image: language.image)
+                    NavTitleLanguageHeader(name: language.name ?? "Language", image: language.image ?? popularLanguages[0].image)
 
                     if !decksSnapshot.isEmpty {
-                        Text("\(language.decks.count) \(language.decks.count == 1 ? "Deck" : "Decks")")
+                        Text("\(language.unwrappedDecks.count) \(language.unwrappedDecks.count == 1 ? "Deck" : "Decks")")
                             .fontWeight(.regular)
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundStyle(Color(UIColor.lightGray))
@@ -68,10 +68,10 @@ struct DecksListView: View {
                     .padding(.vertical)
                     .padding(.horizontal)
                     .animation(.easeInOut(duration: 0.25), value: decksSnapshot.count)
-                    .onAppear { decksSnapshot = language.decks }
-                    .onChange(of: language.decks) { //snapshot needed for proper animation
+                    .onAppear { decksSnapshot = language.unwrappedDecks }
+                    .onChange(of: language.unwrappedDecks) { //snapshot needed for proper animation
                         withAnimation(.easeInOut(duration: 0.25)) {
-                            decksSnapshot = language.decks
+                            decksSnapshot = language.unwrappedDecks
                         }
                     }
                 }
