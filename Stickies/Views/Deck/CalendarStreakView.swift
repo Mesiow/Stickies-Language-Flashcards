@@ -4,111 +4,187 @@
 //
 //  Created by Chris W on 12/13/25.
 //
-
 import SwiftUI
+import SwiftData
 
 struct CalendarStreakView: View {
     @Environment(\.dismiss) private var dismiss
     
-    let studyDates: [Date]  // days user studied this month
+    @State private var currentMonth: Date = Date()
+    @Query(sort: \StudyDay.date) private var studiedDays: [StudyDay]
     
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
-    private var monthDays: [Date] {
-        Calendar.current.generateDaysForCurrentMonth()
+    var daysInMonth: [Date] {
+        Calendar.current.generateDaysForMonth(currentMonth)
+    }
+    
+    var streakCount: Int {
+        StudyTrackingManager.shared.currentStreak(from: studiedDays)
+    }
+    
+    var mascotImage: String {
+        switch streakCount {
+        case 0: return AppInfo.sadCharacter
+        case 1...3: return AppInfo.happyCharacter
+        case 4...10: return AppInfo.stokedCharacter
+        default: return AppInfo.stokedCharacter
+        }
     }
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                VStack(spacing: 12) {
-                    // Month title
-                    Text(Date().formatted(.dateTime.month(.wide).year()))
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundStyle(.black.opacity(0.8))
-                    
-                    // Sticky Note Background
-                    VStack(spacing: 12) {
-                        LazyVGrid(columns: columns, spacing: 12) {
-                            ForEach(monthDays, id: \.self) { day in
-                                
-                                let studied = Calendar.current.isDateInDates(day, studyDates)
-                                let isToday = Calendar.current.isDateInToday(day)
-                                
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .fill(studied ? AppInfo.stickyNoteTintColor : AppInfo.backgroundColor)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 6)
-                                                .stroke(isToday ? Color.black.opacity(0.3) : .clear, lineWidth: 2)
-                                        )
-                                    
-                                    VStack(spacing: 6) {
-                                        Text("\(Calendar.current.component(.day, from: day))")
-                                            .font(.system(size: 14, weight: .semibold))
-                                            .foregroundStyle(.black.opacity(studied ? 1 : 0.45))
-                                        
-                                        Image(systemName: SFSymbols.checkmarkCircleFill)
-                                            .font(.system(size: 14, weight: .semibold))
-                                            .foregroundStyle(studied ? .green : .gray)
-                                    }
-                                    .padding(4)
-                                }
-                                .frame(height: 44)
-                            }
-                        }
+            VStack(spacing: 22) {
+                
+                /*Spacer()
+                    .frame(height: 100)*/
+                
+                StickyMascotView(
+                       width: 90,
+                       height: 90,
+                       image: mascotImage,
+                       message: nil
+                   )
+                   .transition(.scale.combined(with: .opacity))
+                
+                // MARK: - Header
+                VStack(spacing: 8) {
+                    HStack(spacing: 8) {
+                        Text("\(streakCount)")
+                            .font(.system(size: 38, weight: .bold, design: .rounded))
+                            .foregroundStyle(AppInfo.mainTintColor)
+                        
+                        Text("day streak")
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
+                            .foregroundStyle(.black.opacity(0.85))
                     }
-                    .padding()
-                    .background(
-                        AppInfo.stickyNoteTintColor.opacity(0.70)
-                    )
-                    .cornerRadius(14)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .stroke(style: StrokeStyle(lineWidth: 1.6, lineCap: .round, dash: [4, 4]))
-                    )
+                    
+                    Text("Review your flashcards daily to keep your streak going!")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundStyle(.black.opacity(0.75))
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
+                .padding(.horizontal)
+                .multilineTextAlignment(.center)
+                
+                // MARK: - Month Controls
+                HStack(alignment: .center, spacing: 20) {
+                    Text(currentMonth.formatted(.dateTime.month(.wide).year()))
+                        .font(.system(size: 20, weight: .semibold))
+                        .lineLimit(1)
+                    
+                    Spacer()
+                    
+                    Button { changeMonth(-1) }
+                    label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundStyle(.black.opacity(0.6))
+                    }
+                    
+                    Button { changeMonth(+1) }
+                    label: {
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.black.opacity(0.6))
+                    }
+                }
+                .padding(.horizontal)
+                
+                //MARK: - Days of Week
+                  HStack(spacing: 0) {
+                      ForEach(Array(["M", "T", "W", "T", "F", "S", "S"].enumerated()), id: \.offset) { _, day in
+                          Text(day)
+                              .font(.system(size: 14, weight: .medium))
+                              .foregroundStyle(.black.opacity(0.6))
+                              .frame(maxWidth: .infinity)
+                      }
+                  }
+                  .padding(.horizontal, 8)
+                
+                //MARK: - Calendar Grid
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(daysInMonth, id: \.self) { day in
+                        DayTile(
+                            date: day,
+                            studied: Calendar.current.containsDay(day, in: studiedDays),
+                            isToday: Calendar.current.isDateInToday(day)
+                        )
+                    }
+                }
+                .animation(.easeInOut(duration: 0.25), value: currentMonth)
+                .padding(.horizontal)
+                
+                // MARK: - Optional Freeze Message
+               /* HStack {
+                    Image(systemName: "snowflake")
+                        .foregroundStyle(.blue)
+                    Text("1 Streak Freeze left")
+                        .font(.system(size: 15, weight: .semibold))
+                    Spacer()
+                }
+                .padding()
+                .background(Color.blue.opacity(0.12))
+                .cornerRadius(14)
+                .padding(.horizontal)*/
+                
+                Spacer()
             }
+            .background(AppInfo.backgroundColor.ignoresSafeArea())
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
                       dismiss()
                     }label: {
                         Image(systemName: SFSymbols.xmark)
-                            .foregroundStyle(AppInfo.actionButtonTintColor)
+                            .foregroundStyle(AppInfo.mainTintColor)
                     }
                 }
             }
-            .padding(.horizontal)
+        }
+    }
+    
+    // MARK: - Helpers
+    
+    func changeMonth(_ offset: Int) {
+        if let updated = Calendar.current.date(byAdding: .month, value: offset, to: currentMonth) {
+            currentMonth = updated
         }
     }
 }
 
-extension Calendar {
-    func generateDaysForCurrentMonth() -> [Date] {
-        let today = Date()
-        guard
-            let monthInterval = dateInterval(of: .month, for: today),
-            let monthEnd = date(byAdding: .day, value: -1, to: monthInterval.end)
-        else { return [] }
-        
-        return dates(from: monthInterval.start, to: monthEnd)
-    }
+struct DayTile: View {
+    let date: Date
+    let studied: Bool
+    let isToday: Bool
     
-    func dates(from start: Date, to end: Date) -> [Date] {
-        var dates: [Date] = []
-        var current = start
-        
-        while current <= end {
-            dates.append(current)
-            current = date(byAdding: .day, value: 1, to: current)!
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(isToday ? AppInfo.stickyNoteTintColor : tileBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(isToday ? AppInfo.actionButtonTintColor : .clear, lineWidth: 2)
+                )
+                .frame(height: 48)
+            
+            VStack(spacing: 2) {
+                Text("\(Calendar.current.component(.day, from: date))")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.black.opacity(studied ? 1 : 0.4))
+                
+                if studied {
+                    Image(systemName: "flame.fill")
+                        .font(.system(size: 12))
+                        .foregroundStyle(.orange)
+                }
+            }
         }
-        return dates
     }
     
-    func isDateInDates(_ date: Date, _ dates: [Date]) -> Bool {
-        dates.contains { isDate($0, inSameDayAs: date) }
+    private var tileBackground: Color {
+        studied
+        ? AppInfo.stickyNoteTintColor
+        : Color.black.opacity(0.08)
     }
 }
-
 

@@ -16,6 +16,7 @@ enum SwipeDirection {
 struct StudyModeView: View {
     
     @StateObject private var viewModel = StudyModeViewModel()
+    @EnvironmentObject private var homeViewModel: HomeViewModel
     @Environment(\.dismiss) private var dismiss
     
     @Bindable var deck: Deck
@@ -246,14 +247,19 @@ struct StudyModeView: View {
                             correct: viewModel.correctCount,
                             incorrect: viewModel.incorrectCount,
                             onClose: {
-                                //Apply decay after completing review
-                                SRSManager.shared.applyDecay(to: deck.unwrappedStickies)
                                 withAnimation(.spring()) {
                                     viewModel.showResults = false
                                     dismiss()
                                 }
                             }
                         )
+                        .onAppear {
+                            print("record review")
+                            //Apply decay after completing review
+                            SRSManager.shared.applyDecay(to: deck.unwrappedStickies)
+                            //Record session into calendar view
+                            StudyTrackingManager.shared.recordStudyDay(context: homeViewModel.getModelContext())
+                        }
                     }
                 }
             )

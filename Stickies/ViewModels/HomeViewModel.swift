@@ -30,6 +30,10 @@ final class HomeViewModel: ObservableObject {
         self.modelContext = context
     }
     
+    func getModelContext() -> ModelContext {
+        return self.modelContext
+    }
+    
     func addLanguage(_ language: Language) {
         modelContext.insert(language)
         try? modelContext.save()

@@ -30,7 +30,8 @@ struct StickiesApp: App {
     
     init(){
         let schema = Schema([
-            Language.self
+            Language.self,
+            StudyDay.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         

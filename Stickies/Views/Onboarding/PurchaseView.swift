@@ -63,7 +63,7 @@ struct PurchaseView: View {
         }
     }
     
-    var calculateFullPrice: Double? {
+   /* var calculateFullPrice: Double? {
         if let weeklyPriceString = purchaseModel.productDetails.first(where: {$0.duration == "week"})?.price {
             let formatter = NumberFormatter()
             formatter.numberStyle = .currency
@@ -77,7 +77,24 @@ struct PurchaseView: View {
         }
         
         return nil
-    }
+    }*/
+    
+    //Calculate full price from monthly
+    var calculateFullPrice: Double? {
+         if let monthlyPriceString = purchaseModel.productDetails.first(where: {$0.duration == "month"})?.price {
+             let formatter = NumberFormatter()
+             formatter.numberStyle = .currency
+
+             if let number = formatter.number(from: monthlyPriceString) {
+                 let monthlyPriceDouble = number.doubleValue
+                 // Months per year: 12
+                 return monthlyPriceDouble * 12.0
+             }
+             
+         }
+         
+         return nil
+     }
     
     var calculatePercentageSaved: Int {
         if let calculateFullPrice = calculateFullPrice, let yearlyPriceString = purchaseModel.productDetails.first(where: {$0.duration == "year"})?.price {
@@ -190,7 +207,7 @@ struct PurchaseView: View {
                                                     .aspectRatio(contentMode: .fit)
                                                     .frame(width: 18, height: 18, alignment: .center)
                                                     .clipped()
-                                                    .foregroundColor(.gray)
+                                                    .foregroundStyle(.gray)
                                                     
                                                     Text(productDetails.durationPlanName)
                                                         .font(.title3.bold())
@@ -233,7 +250,7 @@ struct PurchaseView: View {
                                                 VStack {
                                                     Text("SAVE \(calculatePercentageSaved)%")
                                                         .font(.caption.bold())
-                                                        .foregroundColor(.white)
+                                                        .foregroundStyle(.white)
                                                         .padding(8)
                                                 }
                                                 .background(Color.red)
@@ -242,11 +259,11 @@ struct PurchaseView: View {
                                             
                                             ZStack {
                                                 Image(systemName: (selectedProductId == productDetails.productId) ? "circle.fill" : "circle")
-                                                    .foregroundColor((selectedProductId == productDetails.productId) ? color : Color.primary.opacity(0.15))
+                                                    .foregroundStyle((selectedProductId == productDetails.productId) ? color : Color.primary.opacity(0.15))
                                                 
                                                 if selectedProductId == productDetails.productId {
                                                     Image(systemName: "checkmark")
-                                                        .foregroundColor(Color.white)
+                                                        .foregroundStyle(Color.white)
                                                         .scaleEffect(0.8)
                                                 }
                                             }
@@ -254,17 +271,17 @@ struct PurchaseView: View {
                                             
                                         }
                                         .padding(.horizontal)
-                                        .padding(.vertical, 10)
+                                        .padding(.vertical, 16)
                                     }
                                     //.background(Color(.systemGray4))
-                                    .frame(maxWidth: .infinity, minHeight: 65) // ensures minimum tappable height
+                                    .frame(maxWidth: .infinity, minHeight: 75) // ensures minimum tappable height
                                     .cornerRadius(8)
                                     .overlay(
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 6)
-                                                .stroke((selectedProductId == productDetails.productId) ? color : Color.primary.opacity(0.15), lineWidth: 1) // Border color and width
+                                                .stroke((selectedProductId == productDetails.productId) ? color : Color.primary.opacity(0.15), lineWidth: 1.5) // Border color and width
                                             RoundedRectangle(cornerRadius: 6)
-                                                .foregroundColor((selectedProductId == productDetails.productId) ? color.opacity(0.05) : Color.primary.opacity(0.001))
+                                                .foregroundStyle((selectedProductId == productDetails.productId) ? color.opacity(0.2) : Color.primary.opacity(0.001))
                                         }
                                     )
                                 }

@@ -118,6 +118,8 @@ struct DecksListView: View {
                 }label: {
                     Image(systemName: SFSymbols.calendar)
                 }
+                .buttonStyle(.bordered)
+                .tint(AppInfo.mainTintColor)
             }
         }
         .background(
@@ -127,8 +129,8 @@ struct DecksListView: View {
             NewDeckView(language: language)
         }
         .sheet(isPresented: $showCalendarStreakView) {
-            CalendarStreakView(studyDates: [Date.now, Date.now.addingTimeInterval(-36500)])
-                .presentationDetents([.large, .medium])
+            CalendarStreakView()
+                .presentationDetents([.large])
         }
         .alert(deckToDelete != nil ? "Are you sure you want to delete \(deckToDelete?.name ?? "Name")?" : "Are you sure you want to delete this deck?", isPresented: $showDeckDeleteConfirmation) {
             Button("Delete", role: .destructive) {
