@@ -42,8 +42,7 @@ struct CalendarStreakView: View {
                 StickyMascotView(
                        width: 90,
                        height: 90,
-                       image: mascotImage,
-                       message: nil
+                       image: mascotImage
                    )
                    .transition(.scale.combined(with: .opacity))
                 

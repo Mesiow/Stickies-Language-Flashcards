@@ -11,6 +11,7 @@ struct AddLanguageView: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var viewModel: HomeViewModel
+    @EnvironmentObject private var paywall: PaywallManager
     
     @State private var searchText = ""
     @State private var showLanguageAlreadyExistsAlert = false
@@ -34,6 +35,11 @@ struct AddLanguageView: View {
                         return
                     }
                     
+                    guard PremiumManager.shared.canAddLanguage(currentCount: existingLanguages.count) else {
+                        paywall.show(reason: .addLanguageLimit)
+                        return
+                    }
+                    
                     let languageSelected = Language(code: lang.code, name: lang.name, image: lang.image)
                     viewModel.addLanguage(languageSelected)
                     
@@ -49,6 +55,7 @@ struct AddLanguageView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .animation(.easeInOut(duration: 0.25), value: filteredLanguages)
         }
         .searchable(text: $searchText, prompt: "Search languages")
         .navigationTitle("Add Language")

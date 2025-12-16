@@ -174,29 +174,27 @@ struct StudyModeView: View {
                 .frame(maxWidth: .infinity, minHeight: 360, maxHeight: 360)
                 
                 HStack {
-                    HStack {
+                    VStack(spacing: 8) {
                         Image(systemName: SFSymbols.chevronLeftTwo)
-                            .resizable()
-                            .scaledToFit()
+                            .font(.system(size: 28, weight: .bold))
                             .foregroundStyle(.red)
-                            .frame(width: 20, height: 20)
-                        Text("Swipe left\n if you don't know it")
+                        Text("Swipe left\n if you don't know")
+                            .foregroundStyle(.secondary)
+                            .font(.system(size: 17, weight: .medium))
                             .frame(maxWidth: .infinity)
                     }
                     
-                    HStack {
-                        Text("Swipe right\n if you know it")
-                            .frame(maxWidth: .infinity)
+                    VStack(spacing: 8) {
                         Image(systemName: SFSymbols.chevronRightTwo)
-                            .resizable()
-                            .scaledToFit()
+                            .font(.system(size: 28, weight: .bold))
                             .foregroundStyle(.green)
-                            .frame(width: 20, height: 20)
+                        Text("Swipe right\n if you know")
+                            .foregroundStyle(.secondary)
+                            .font(.system(size: 18, weight: .medium))
+                            .frame(maxWidth: .infinity)
+                            
                     }
                 }
-                .foregroundStyle(.black.opacity(0.7))
-                .font(.system(size: 14))
-                .fontWeight(.medium)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .padding(.horizontal, 20)

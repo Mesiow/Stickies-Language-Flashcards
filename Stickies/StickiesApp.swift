@@ -23,10 +23,10 @@ struct StickiesApp: App {
     @StateObject private var homeViewModel: HomeViewModel
     @StateObject private var navigationModel = NavigationModel()
     @StateObject private var purchaseManager = PurchaseManager()
+    @StateObject private var paywallManager = PaywallManager.shared
     
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var showOnboarding = false
-    @State private var showPaywall = false
     
     init(){
         let schema = Schema([
@@ -72,11 +72,24 @@ struct StickiesApp: App {
                 .environmentObject(homeViewModel)
                 .environmentObject(navigationModel)
                 .environmentObject(purchaseManager)
+                .environmentObject(paywallManager)
                 .environment(\.font, .system(.body, design: .rounded))
-                .fullScreenCover(isPresented: $showPaywall) {
-                    PurchaseView(isPresented: $showPaywall)
+                .fullScreenCover(isPresented: $showOnboarding) {
+                    OnboardingFlow {
+                        //On Finish
+                        hasCompletedOnboarding = true
+                        showOnboarding = false
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(AppInfo.backgroundColor)
+                }
+                .fullScreenCover(isPresented: $paywallManager.isPaywallPresented) {
+                    PurchaseView(isPresented: $paywallManager.isPaywallPresented)
                         .background(AppInfo.backgroundColor)
                         .environmentObject(purchaseManager)
+                }
+                .task {
+                    showOnboarding = !hasCompletedOnboarding
                 }
                 .task {
                     await purchaseManager.updatePurchasedProducts()

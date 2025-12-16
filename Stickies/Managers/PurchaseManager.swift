@@ -74,6 +74,7 @@ class PurchaseManager: ObservableObject {
             }
         }
         isSubscribed = active
+        PremiumManager.shared.updateSubscriptionStatus(isSubscribed: active)
     }
     
     //This method runs in the background and is necessary for cases when the users purchase was interrupted (i.e billing information must be updated or phone died or apple terms must be accepted etc..) so that we can listen and finish the transaction if needed

@@ -163,9 +163,10 @@ struct StickiesListView: View {
                 Button {
                     showNewStickyView = true
                 }label: {
-                    Image(systemName: SFSymbols.plusCircleFill)
-                        .foregroundStyle(AppInfo.actionButtonTintColor)
+                    Image(systemName: SFSymbols.plus)
                 }
+                .buttonStyle(.bordered)
+                .tint(AppInfo.mainTintColor)
             }
         }
         .alert("No Sticky Flashcards exist", isPresented: $showNoStickiesExistAlert) {

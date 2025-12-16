@@ -11,6 +11,7 @@ struct DecksListView: View {
     
     @EnvironmentObject private var viewModel: HomeViewModel
     @EnvironmentObject private var navigationModel: NavigationModel
+    @EnvironmentObject private var paywall: PaywallManager
     @Environment(\.dismiss) private var dismiss
     
     @Bindable var language: Language
@@ -89,6 +90,10 @@ struct DecksListView: View {
         .safeAreaInset(edge: .bottom) {
             VStack {
                 Button {
+                    guard PremiumManager.shared.canAddDeck(currentCount: language.unwrappedDecks.count) else {
+                        paywall.show(reason: .addDeckLimit)
+                        return
+                    }
                     showNewDeckView = true
                 }label: {
                     Text("+ New Deck")

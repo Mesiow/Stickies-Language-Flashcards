@@ -50,6 +50,8 @@ struct HomeView: View {
                     .padding(.horizontal)
                     .padding(.vertical)
                 }
+                .scrollIndicators(.hidden)
+                
                 if languages.isEmpty {
                     CustomContentUnavailableView(label: "No languages yet", image: AppInfo.sadCharacter, description: "To get started, tap the + add button to add a language")
                         .animation(.easeInOut(duration: 0.3), value: languages)
@@ -74,7 +76,7 @@ struct HomeView: View {
             }
             .safeAreaInset(edge: .bottom) { //add button into safe area so that we dont block the last grid item
                 //Add Item Button
-                HStack {
+                /*HStack {
                     Spacer()
                     Button {
                         navigationModel.push(.addLanguage)
@@ -92,7 +94,23 @@ struct HomeView: View {
                     )
                     .padding(.trailing, 32)
                     .padding(.bottom, 32)
+                }*/
+                VStack {
+                    Button {
+                        navigationModel.push(.addLanguage)
+                    }label: {
+                        Text("+ New Language")
+                            .font(.system(size: 20, weight: .bold))
+                            .padding(.vertical, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 54)  // makes it stretch to the container width
+                    .padding()
+                    .buttonStyle(DepthButtonStyle(
+                        foregroundColor: AppInfo.actionButtonTintColor,
+                        backgroundColor: AppInfo.mainTintColor))
                 }
+                .padding(.top, 4)
+                .padding(.bottom, 4)
             }
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -100,12 +118,6 @@ struct HomeView: View {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             viewModel.isEditing.toggle()
                         }
-                    }
-                    
-                    Button {
-                        
-                    }label: {
-                        Image(systemName: SFSymbols.ellipseCircle)
                     }
                 }
             }
@@ -129,5 +141,31 @@ struct HomeView: View {
                 AppInfo.backgroundColor.ignoresSafeArea()
             )
         }
+    }
+}
+
+struct AddLanguageCard: View {
+    
+    let action: () -> Void
+    
+    var body: some View {
+        Button {
+            action()
+        }label: {
+            VStack(spacing: 12) {
+                Image(systemName: SFSymbols.plus)
+                    .font(.system(size: 40, weight: .semibold))
+                    .foregroundStyle(.black.opacity(0.85))
+                
+                Text("Add Language")
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(.black.opacity(0.80))
+            }
+            .frame(maxWidth: .infinity, maxHeight: 170)
+            .padding()
+        }
+        .buttonStyle(DepthButtonStyle(
+            foregroundColor: AppInfo.stickyNoteTintColor,
+            backgroundColor: AppInfo.stickyNoteBackgroundTintColor))
     }
 }

@@ -2,7 +2,7 @@ import SwiftUI
 
 enum AppInfo {
     static let name: String = "Stickies"
-    static let id: String = ""
+    static let id: String = "6756522449"
     static let bundleID = "com.mesiow.Stickies"
     static let url: String = "https://apps.apple.com/app/id\(id)"
     static let termsUrl = "https://www.crispyappsllc.com/terms"

@@ -34,7 +34,7 @@ struct PurchaseView: View {
     let color: Color = Color(AppInfo.stickyNoteBackgroundTintColor)
     let icon: String = AppInfo.happyCharacter
     
-    private let allowCloseAfter: CGFloat = 4.0 //time in seconds until close is allowed
+    private let allowCloseAfter: CGFloat = 2.5 //time in seconds until close is allowed
     
     var hasCooldown: Bool = true
     

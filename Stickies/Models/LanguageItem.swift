@@ -8,7 +8,7 @@
 import Foundation
 
 //For displaying in the AddLanguageView
-struct LanguageItem: Identifiable {
+struct LanguageItem: Identifiable, Equatable {
     let id = UUID()
     let code: String
     let name: String

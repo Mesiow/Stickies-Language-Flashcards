@@ -38,7 +38,7 @@ struct StudyModeCompletedStatisticsView: View {
             
             // Popup card
             VStack(spacing: 15) {
-                StickyMascotView(width: 120, height: 120, image: mascotImage, message: nil)
+                StickyMascotView(width: 120, height: 120, image: mascotImage)
                 
                 Text("Results")
                     .font(.title)

@@ -42,7 +42,7 @@ struct NewStickyCardView: View {
                         VStack(alignment: .leading, spacing: 14) {
                             TextField("Word", text: $viewModel.foreignWord)
                                 .focused($isWordFocused)
-                                .font(.system(size: 28, weight: .semibold))
+                                .font(.system(size: 26, weight: .semibold))
                                 .foregroundStyle(.black)
                                 .padding(.horizontal)
                                 .textFieldStyle(.plain)
@@ -73,7 +73,7 @@ struct NewStickyCardView: View {
                                 set: { viewModel.exampleSentence = $0.isEmpty ? nil : $0 }
                                 ))
                                 .font(.system(size: 18, weight: .regular))
-                                .foregroundColor(.black.opacity(0.9))
+                                .foregroundStyle(.black.opacity(0.9))
                                 .frame(height: 160)
                                 .padding(.horizontal, 4)
                                 .scrollContentBackground(.hidden)
@@ -82,7 +82,7 @@ struct NewStickyCardView: View {
                                     Group {
                                           if (viewModel.exampleSentence ?? "").isEmpty {
                                               Text("Example sentence (optional)")
-                                                  .foregroundColor(.black.opacity(0.3))
+                                                  .foregroundStyle(.black.opacity(0.3))
                                                   .font(.system(size: 18))
                                                   .padding(.horizontal, 8)
                                                   .padding(.top, 8)

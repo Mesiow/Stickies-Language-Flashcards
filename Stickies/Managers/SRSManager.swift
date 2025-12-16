@@ -166,15 +166,20 @@ final class SRSManager {
         
         //If decay was applied recently, skip this
         if let lastDecay = sticky.lastDecayAppliedDate {
+            print("last decay ", lastDecay)
             let hoursSinceLastDecay = now.timeIntervalSince(lastDecay) / 3600
             if hoursSinceLastDecay < 24 {
+                print("less than 24 hours, dont apply decay yet")
                 return //if less than 24 hours has passed since last decay, prevent repeated decay within the day
             }
         }
         
         //Get how many days since the last review of this sticky card (86400 seconds in a day)
         let days = now.timeIntervalSince(lastReviewedDate) / 86400
-        guard days >= 1 else { return } //Don't decay card within the same day, should be once per day when the stickies list is viewed for a deck
+        guard days >= 1 else {
+            print("less than 1 day, dont decay", days)
+            return
+        } //Don't decay card within the same day, should be once per day when the stickies list is viewed for a deck
         print("Days since last review: \(days)")
         
         let level = strengthLevel(for: sticky) //check current level

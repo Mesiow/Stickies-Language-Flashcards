@@ -11,7 +11,7 @@ struct StickyMascotView: View {
     var width: CGFloat = 100.0
     var height: CGFloat = 100.0
     let image: String
-    let message: String?
+    let message: String? = nil
     
     @State private var bounce: Bool = false
     
