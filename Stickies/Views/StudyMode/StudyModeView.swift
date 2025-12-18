@@ -45,7 +45,7 @@ struct StudyModeView: View {
                     .frame(height: 60)
                 
                 VStack(alignment: .center) {
-                    Text("Sticky \(currentCardIndex + 1) \\ \(shuffledDeck.count)")
+                    Text("Card \(currentCardIndex + 1) \\ \(shuffledDeck.count)")
                         .foregroundStyle(Color(UIColor.lightGray))
                         .font(.system(size: 18, design: .rounded))
                         .fontWeight(.medium)
@@ -213,7 +213,7 @@ struct StudyModeView: View {
                 }
                 .ignoresSafeArea()
             )
-            .navigationTitle("Study Mode")
+            .navigationTitle("Review")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -247,14 +247,16 @@ struct StudyModeView: View {
                             onClose: {
                                 withAnimation(.spring()) {
                                     viewModel.showResults = false
+                                    
+                                    ReviewManager.shared.requestPositiveActionReview()
                                     dismiss()
                                 }
                             }
                         )
                         .onAppear {
-                            print("record review")
                             //Apply decay after completing review
                             SRSManager.shared.applyDecay(to: deck.unwrappedStickies)
+                            
                             //Record session into calendar view
                             StudyTrackingManager.shared.recordStudyDay(context: homeViewModel.getModelContext())
                         }

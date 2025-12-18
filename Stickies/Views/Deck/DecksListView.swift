@@ -97,7 +97,6 @@ struct DecksListView: View {
                     showNewDeckView = true
                 }label: {
                     Text("+ New Deck")
-                        .fontWeight(.medium)
                         .font(.system(size: 20, weight: .semibold))
                         .padding(.vertical, 8)
                 }

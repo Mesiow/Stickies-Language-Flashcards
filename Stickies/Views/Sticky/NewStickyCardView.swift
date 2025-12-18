@@ -127,10 +127,10 @@ struct NewStickyCardView: View {
                         homeViewModel.addNewSticky(for: deck, sticky: newSticky)
                     }
                     
+                    ReviewManager.shared.requestPositiveActionReview()
                     dismiss()
                 }label: {
                     Text(existingSticky == nil ? "Create" : "Save")
-                        .fontWeight(.medium)
                         .font(.system(size: 20, weight: .semibold))
                         .padding(.vertical, 8)
                 }

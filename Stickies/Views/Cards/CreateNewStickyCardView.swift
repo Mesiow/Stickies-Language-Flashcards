@@ -21,7 +21,7 @@ struct CreateNewStickyCardView: View {
                     .frame(width: 22, height: 22)
                     .foregroundStyle(.black.opacity(0.8))
                 
-                Text("Create new sticky note flashcard")
+                Text("Create new sticky flashcard")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.black)
                 

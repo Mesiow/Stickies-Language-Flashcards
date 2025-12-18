@@ -139,7 +139,6 @@ struct StickiesListView: View {
                     showStudyModeView = true
                 }label: {
                     Text("Review")
-                        .fontWeight(.medium)
                         .font(.system(size: 20, weight: .semibold))
                         .padding(.vertical, 8)
                 }
@@ -192,7 +191,6 @@ struct StickiesListView: View {
             }
         }
         .onAppear {
-            print("stickies list appeared")
             //Update strength of sticky flashcards based on last reviewed date
             SRSManager.shared.applyDecay(to: deck.unwrappedStickies)
         }

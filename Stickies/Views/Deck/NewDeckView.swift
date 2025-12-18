@@ -126,6 +126,7 @@ struct NewDeckView: View {
         let deck = Deck(language: language, name: name)
         homeViewModel.addNewDeck(for: language, deck: deck)
         
+        ReviewManager.shared.requestPositiveActionReview()
         dismiss()
     }
 }

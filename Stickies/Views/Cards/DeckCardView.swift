@@ -23,9 +23,9 @@ struct DeckCardView: View {
                 Text(
                     deck.unwrappedStickies.isEmpty
                     ? "No stickies yet"
-                    : "\(deck.unwrappedStickies.count) \(deck.unwrappedStickies.count == 1 ? "sticky" : "stickies")"
+                    : "\(deck.unwrappedStickies.count) \(deck.unwrappedStickies.count == 1 ? "card" : "cards")"
                 )
-                .font(.system(size: 14, weight: .regular))
+                .font(.system(size: 14, weight: .medium))
                 .opacity(0.6)
             }
             .multilineTextAlignment(.center)

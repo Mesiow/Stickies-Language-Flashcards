@@ -43,6 +43,7 @@ struct AddLanguageView: View {
                     let languageSelected = Language(code: lang.code, name: lang.name, image: lang.image)
                     viewModel.addLanguage(languageSelected)
                     
+                    ReviewManager.shared.requestPositiveActionReview()
                     dismiss()
                 }) {
                     HStack(spacing: 12) {

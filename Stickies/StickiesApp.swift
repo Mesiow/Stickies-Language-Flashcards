@@ -79,6 +79,8 @@ struct StickiesApp: App {
                         //On Finish
                         hasCompletedOnboarding = true
                         showOnboarding = false
+                        
+                        ReviewManager.shared.requestPositiveActionReview()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(AppInfo.backgroundColor)

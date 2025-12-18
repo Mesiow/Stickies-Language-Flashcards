@@ -32,6 +32,7 @@ struct PurchaseView: View {
     @State private var selectedProductId: String = ""
     
     let color: Color = Color(AppInfo.stickyNoteBackgroundTintColor)
+    let imageColor: Color = Color(AppInfo.mainTintColor)
     let icon: String = AppInfo.happyCharacter
     
     private let allowCloseAfter: CGFloat = 2.5 //time in seconds until close is allowed
@@ -165,18 +166,20 @@ struct PurchaseView: View {
                             }
                     }
                     Spacer()
-                    VStack (spacing: 14) {
+                    VStack (spacing: 12) {
                         Text("Unlock Premium Access")
                             .font(.system(size: 30, weight: .semibold))
                             .multilineTextAlignment(.center)
-                        VStack (alignment: .leading, spacing: 18) {
-                            PurchaseFeatureView(title: "Unlimited Languages", desc: "Add as many languages as you need for studying", icon: SFSymbols.doc, color: color)
-                            PurchaseFeatureView(title: "Unlimited Decks", desc: "Create as many decks as you want for each language", icon: SFSymbols.appGift, color: color)
-                            PurchaseFeatureView(title: "Learn faster", desc: "Easy and simple review system helps you learn and remember more", icon: SFSymbols.tag, color: color)
+                        VStack (alignment: .leading, spacing: 14) {
+                            PurchaseFeatureView(title: "Unlimited Languages", desc: "Add as many languages as you need for studying", icon: SFSymbols.globe, color: imageColor)
+                            PurchaseFeatureView(title: "Unlimited Decks", desc: "Create as many decks as you want for each language", icon: SFSymbols.menucard, color: imageColor)
+                            PurchaseFeatureView(title: "Learn faster", desc: "Easy and simple review system helps you learn and remember more", icon: SFSymbols.brain, color: imageColor)
+                            PurchaseFeatureView(title: "Future Features", desc: "Access to any new premium features", icon: SFSymbols.star, color: imageColor)
                         }
-                        .font(.system(size: 20))
+                        .font(.system(size: 18))
                         .padding(.top, 4)
-                        .padding()
+                        .padding(.horizontal)
+                        .padding(.vertical, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
                                 .fill(AppInfo.backgroundColor)
@@ -271,10 +274,10 @@ struct PurchaseView: View {
                                             
                                         }
                                         .padding(.horizontal)
-                                        .padding(.vertical, 16)
+                                        .padding(.vertical, 14)
                                     }
                                     //.background(Color(.systemGray4))
-                                    .frame(maxWidth: .infinity, minHeight: 75) // ensures minimum tappable height
+                                    .frame(maxWidth: .infinity, minHeight: 70) // ensures minimum tappable height
                                     .cornerRadius(8)
                                     .overlay(
                                         ZStack {

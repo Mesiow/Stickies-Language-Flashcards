@@ -119,8 +119,6 @@ final class SRSManager {
         sticky.strength = 1.0 //mastered = max strength
         sticky.isMastered = true
         sticky.isInMistakePool = false
-        
-        print("mark mastered")
     }
     
     func unmarkMastered(_ sticky: Sticky) {
@@ -131,8 +129,6 @@ final class SRSManager {
         }else {
             sticky.strength = 0.5 //fallback
         }
-        print("mark unmastered")
-        print("prev strength \(sticky.strength ?? 0)")
         sticky.previousStrength = nil
     }
     
@@ -153,7 +149,6 @@ final class SRSManager {
         if !notAvailable {
             if let mastered = sticky.isMastered {
                 guard !mastered else {
-                    print("mastered card, do not apply decay")
                     return //Skip decay if sticky is mastered
                 }
             }
@@ -166,10 +161,8 @@ final class SRSManager {
         
         //If decay was applied recently, skip this
         if let lastDecay = sticky.lastDecayAppliedDate {
-            print("last decay ", lastDecay)
             let hoursSinceLastDecay = now.timeIntervalSince(lastDecay) / 3600
             if hoursSinceLastDecay < 24 {
-                print("less than 24 hours, dont apply decay yet")
                 return //if less than 24 hours has passed since last decay, prevent repeated decay within the day
             }
         }
@@ -177,18 +170,14 @@ final class SRSManager {
         //Get how many days since the last review of this sticky card (86400 seconds in a day)
         let days = now.timeIntervalSince(lastReviewedDate) / 86400
         guard days >= 1 else {
-            print("less than 1 day, dont decay", days)
             return
         } //Don't decay card within the same day, should be once per day when the stickies list is viewed for a deck
-        print("Days since last review: \(days)")
         
         let level = strengthLevel(for: sticky) //check current level
         let dailyDecayRate = level.dailyDecayRate //gets decay rate based on current level
-        print("decay rate \(dailyDecayRate)")
         
         let newStrength = strength - (dailyDecayRate * days)
         sticky.strength = max(0.0, newStrength) //set new strength, if its lower than 0 then clamp it at 0
-        print("Strength: \(sticky.strength ?? 0.0)")
         
         //Mark when last decay was applied
         sticky.lastDecayAppliedDate = now
