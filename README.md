@@ -3,9 +3,7 @@
 Stickies is an iOS app for learning vocabulary in a new language with sticky-note flashcards.
 
 <p align="center">
-  <img src="screenshots/welcome.png" width="280" alt="Stickies welcome screen" />
-  &nbsp;&nbsp;
-  <img src="screenshots/home.png" width="280" alt="Stickies languages screen" />
+  <img src="screenshots/screenshot.png" width="300" alt="Stickies deck screen with sticky flashcards" />
 </p>
 
 ## Features
