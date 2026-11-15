@@ -15,7 +15,6 @@ Stickies is an iOS app for learning vocabulary in a new language with sticky-not
 - **Recent mistakes**: review the cards you've been getting wrong.
 - **Streak calendar**: see which days you studied.
 - **iCloud sync**: your data syncs across devices with SwiftData and CloudKit.
-- **Premium**: in-app purchases through StoreKit.
 
 ## Tech stack
 
