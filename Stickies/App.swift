@@ -23,7 +23,7 @@ enum AppInfo {
     static let secondaryButtonTintColor = Color("SecondaryButtonTintColor")
     static let secondaryButtonBackgroundTintColor = Color("SecondaryButtonBackgroundTint")
     
-    static let backgroundColor = secondaryTintColor.opacity(0.35)
+    static let backgroundColor = Color("AppBackgroundColor") //warm cream that pairs with the sticky yellow
     
     //Character image names
     static let sadCharacter = "character-sad"

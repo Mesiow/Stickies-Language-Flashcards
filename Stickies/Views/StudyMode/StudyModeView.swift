@@ -221,8 +221,8 @@ struct StudyModeView: View {
                         viewModel.showEndStudyModeConfirmation = true
                     }label: {
                         Image(systemName: SFSymbols.xmark)
-                            .foregroundStyle(AppInfo.actionButtonTintColor)
                     }
+                    .yellowToolbarButton()
                     .opacity(viewModel.showResults ? 0.3 : 1.0) //disable button if results are showing
                     .disabled(viewModel.showResults)
                 }

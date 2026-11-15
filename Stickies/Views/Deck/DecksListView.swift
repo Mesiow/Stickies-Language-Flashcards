@@ -122,8 +122,7 @@ struct DecksListView: View {
                 }label: {
                     Image(systemName: SFSymbols.calendar)
                 }
-                .buttonStyle(.bordered)
-                .tint(AppInfo.mainTintColor)
+                .yellowToolbarButton()
             }
         }
         .background(

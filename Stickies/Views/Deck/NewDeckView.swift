@@ -69,8 +69,8 @@ struct NewDeckView: View {
                         dismiss()
                     }label: {
                         Image(systemName: SFSymbols.xmark)
-                            .foregroundStyle(AppInfo.actionButtonTintColor)
                     }
+                    .yellowToolbarButton()
                 }
             }
             .safeAreaInset(edge: .bottom) {

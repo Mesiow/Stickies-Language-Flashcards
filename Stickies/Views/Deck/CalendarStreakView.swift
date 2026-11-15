@@ -135,8 +135,8 @@ struct CalendarStreakView: View {
                       dismiss()
                     }label: {
                         Image(systemName: SFSymbols.xmark)
-                            .foregroundStyle(AppInfo.mainTintColor)
                     }
+                    .yellowToolbarButton()
                 }
             }
         }

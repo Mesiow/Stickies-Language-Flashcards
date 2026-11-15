@@ -164,8 +164,7 @@ struct StickiesListView: View {
                 }label: {
                     Image(systemName: SFSymbols.plus)
                 }
-                .buttonStyle(.bordered)
-                .tint(AppInfo.mainTintColor)
+                .yellowToolbarButton()
             }
         }
         .alert("No Sticky Flashcards exist", isPresented: $showNoStickiesExistAlert) {

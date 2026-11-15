@@ -52,3 +52,13 @@ struct DepthCircleButtonStyle: ButtonStyle {
     }
 }
 
+
+//Solid yellow toolbar button with a black icon
+extension View {
+    func yellowToolbarButton() -> some View {
+        self
+            .buttonStyle(.borderedProminent)
+            .tint(AppInfo.mainTintColor)
+            .foregroundStyle(.black)
+    }
+}
